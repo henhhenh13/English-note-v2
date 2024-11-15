@@ -1,10 +1,15 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import App from './App.tsx';
+import { RecoilRoot } from 'recoil';
+import NiceModal from '@ebay/nice-modal-react';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <RecoilRoot>
+      <NiceModal.Provider>
+        <App />
+      </NiceModal.Provider>
+    </RecoilRoot>
   </StrictMode>,
-)
+);
