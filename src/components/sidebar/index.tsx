@@ -6,7 +6,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import { Paper } from '@mui/material';
-import usePageManager from '@/managers/page/managet';
+import usePageManager from '@/managers/page/manager';
 
 export default function Sidebar() {
   const { updatePage } = usePageManager();

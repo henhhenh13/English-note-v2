@@ -6,7 +6,7 @@ import '@fontsource/roboto/700.css';
 import 'react-json-view-lite/dist/index.css';
 import { Container, Stack } from '@mui/material';
 import Sidebar from '@/components/sidebar';
-import usePageManager from '@/managers/page/managet';
+import usePageManager from '@/managers/page/manager';
 import { useMemo } from 'react';
 import VocabularyPage from '@/pages/vocabulary';
 import GrammarPage from '@/pages/grammar';
