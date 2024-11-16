@@ -13,6 +13,7 @@ import GrammarPage from '@/pages/grammar';
 import UnitPage from '@/pages/unit';
 import ApiTestingPage from '@/pages/api-testing';
 import UiTesting from '@/pages/ui-testing';
+import { Toaster } from 'sonner';
 
 function App() {
   const { page } = usePageManager();
@@ -35,16 +36,19 @@ function App() {
   }, [page]);
 
   return (
-    <Stack
-      direction="row"
-      spacing={6}
-      sx={{ height: '100vh', width: '100vw', overflow: 'hidden' }}
-    >
-      <Sidebar />
-      <Container maxWidth="md" sx={{ py: 4, overflowY: 'auto' }}>
-        {render}
-      </Container>
-    </Stack>
+    <>
+      <Stack
+        direction="row"
+        spacing={6}
+        sx={{ height: '100vh', width: '100vw', overflow: 'hidden' }}
+      >
+        <Sidebar />
+        <Container maxWidth="md" sx={{ py: 4, overflowY: 'auto' }}>
+          {render}
+        </Container>
+      </Stack>
+      <Toaster richColors position="top-right" />
+    </>
   );
 }
 
