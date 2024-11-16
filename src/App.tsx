@@ -12,6 +12,7 @@ import VocabularyPage from '@/pages/vocabulary';
 import GrammarPage from '@/pages/grammar';
 import UnitPage from '@/pages/unit';
 import ApiTestingPage from '@/pages/api-testing';
+import UiTesting from '@/pages/ui-testing';
 
 function App() {
   const { page } = usePageManager();
@@ -26,6 +27,8 @@ function App() {
         return <UnitPage />;
       case 'apiTesting':
         return <ApiTestingPage />;
+      case 'uiTesting':
+        return <UiTesting />;
       default:
         return <VocabularyPage />;
     }

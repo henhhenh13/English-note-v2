@@ -7,62 +7,71 @@ import ListItemText from '@mui/material/ListItemText';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import { Paper } from '@mui/material';
 import usePageManager from '@/managers/page/manager';
-
+import { useMemo } from 'react';
+import { PageState } from '@/managers/page/state';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
+import { SvgIconComponent } from '@mui/icons-material';
+import CategoryIcon from '@mui/icons-material/Category';
+import PestControlIcon from '@mui/icons-material/PestControl';
+import BugReportIcon from '@mui/icons-material/BugReport';
 export default function Sidebar() {
-  const { updatePage } = usePageManager();
+  const { page, updatePage } = usePageManager();
+
+  const render = useMemo(() => {
+    const pages: { title: string; key: PageState; icon: SvgIconComponent }[] = [
+      {
+        title: 'Units',
+        key: 'unit',
+        icon: LocalLibraryIcon,
+      },
+      {
+        title: 'Vocabularies',
+        key: 'vocabulary',
+        icon: GTranslateIcon,
+      },
+      {
+        title: 'Grammars',
+        key: 'grammar',
+        icon: CategoryIcon,
+      },
+      {
+        title: 'Api Testing',
+        key: 'apiTesting',
+        icon: BugReportIcon,
+      },
+      {
+        title: 'UI Testing',
+        key: 'uiTesting',
+        icon: PestControlIcon,
+      },
+    ];
+
+    return (
+      <List>
+        {pages.map(({ title, key, icon: Icon }, index) => (
+          <ListItem
+            key={`${key}-${index}`}
+            disablePadding
+            onClick={() => updatePage(key)}
+          >
+            <ListItemButton>
+              <ListItemIcon>
+                <Icon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                sx={{ color: page === key ? 'primary.main' : '' }}
+                primary={title}
+              />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    );
+  }, [page, updatePage]);
+
   return (
     <Paper sx={{ width: 250, minWidth: 250, height: '100vh' }} elevation={4}>
-      <Box role="presentation">
-        <List>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <GTranslateIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Units"
-                onClick={() => updatePage('unit')}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <GTranslateIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Vocabularies"
-                onClick={() => updatePage('vocabulary')}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <GTranslateIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Grammars"
-                onClick={() => updatePage('grammar')}
-              />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <GTranslateIcon />
-              </ListItemIcon>
-              <ListItemText
-                primary="Api Testing"
-                onClick={() => updatePage('apiTesting')}
-              />
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Box>
+      <Box>{render}</Box>
     </Paper>
   );
 }
