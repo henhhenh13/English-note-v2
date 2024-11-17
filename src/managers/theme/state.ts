@@ -12,7 +12,7 @@ export const THEMES_STATE = atom<ThemeState>({
   default: {
     list: new Map(),
     flags: {
-      isLoading: false,
+      isLoading: true,
       isSuccess: false,
       isError: false,
     },
