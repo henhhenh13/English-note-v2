@@ -43,7 +43,7 @@ function App() {
         sx={{ height: '100vh', width: '100vw', overflow: 'hidden' }}
       >
         <Sidebar />
-        <Container maxWidth="md" sx={{ py: 4, overflowY: 'auto' }}>
+        <Container maxWidth="lg" sx={{ py: 4, overflowY: 'auto' }}>
           {render}
         </Container>
       </Stack>

@@ -7,7 +7,8 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 type UseThemeManager = {
   fetchThemes: () => Promise<ApiStatus>;
-  themeCollection: ThemeCollection;
+  themes: ThemeCollection['list'];
+  flags: ThemeCollection['flags'];
 };
 
 export default function useThemeManager(): UseThemeManager {
@@ -31,11 +32,12 @@ export default function useThemeManager(): UseThemeManager {
       });
     }
 
-    return flags
+    return flags;
   }, [fetchThemesApi, setThemeState]);
 
   return {
     fetchThemes,
-    themeCollection,
+    themes: themeCollection.list,
+    flags: themeCollection.flags,
   };
 }
