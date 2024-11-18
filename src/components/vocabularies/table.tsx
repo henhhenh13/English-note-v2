@@ -8,6 +8,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { Tooltip } from '@mui/material';
 const columns: GridColDef[] = [
   { field: 'vocabulary', headerName: 'Vocabulary', width: 130 },
   { field: 'translation', headerName: 'Translation', width: 130 },
@@ -18,15 +19,20 @@ const columns: GridColDef[] = [
     width: 100,
     cellClassName: 'actions',
     getActions: ({ row }: GridRowParams) => {
-      return [
-        <GridActionsCellItem
-          icon={<RemoveRedEyeIcon color="primary" />}
-          label="test"
-          className="textPrimary"
-          color="inherit"
-          onClick={() => console.log(row.description)}
-        />,
-      ];
+      return row.description
+        ? [
+            <GridActionsCellItem
+              icon={
+                <Tooltip title={row.description}>
+                  <RemoveRedEyeIcon color="primary" />
+                </Tooltip>
+              }
+              label="test"
+              className="textPrimary"
+              color="inherit"
+            />,
+          ]
+        : [];
     },
   },
   {
