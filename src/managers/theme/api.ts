@@ -1,5 +1,6 @@
 import { Theme, ThemeApiService } from '@/managers/theme/interface';
 import { supabase } from '@/supabase-client';
+import camelize from 'camelize-ts';
 
 type UseThemeApi = {
   fetchThemes: ThemeApiService['fetchThemes'];
@@ -12,7 +13,7 @@ export default function useThemeApi(): UseThemeApi {
       .select<string, Theme>('*, vocabularies(*)');
 
     return {
-      list: data || [],
+      list: camelize(data) || [],
       flags: {
         isLoading: false,
         isSuccess: true,
