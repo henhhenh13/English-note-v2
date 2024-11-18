@@ -9,6 +9,7 @@ import snakify from 'snakify-ts';
 type UseVocabularyApi = {
   fetchVocabularies: () => Promise<void>;
   updateVocabulary: VocabularyApiService['updateVocabulary'];
+  deleteVocabulary: VocabularyApiService['deleteVocabulary'];
 };
 export default function useVocabularyApi(): UseVocabularyApi {
   const fetchVocabularies = async () => {
@@ -37,5 +38,17 @@ export default function useVocabularyApi(): UseVocabularyApi {
     };
   };
 
-  return { fetchVocabularies, updateVocabulary };
+  const deleteVocabulary: VocabularyApiService['deleteVocabulary'] = async (
+    id,
+  ) => {
+    const { error } = await supabase.from('vocabularies').delete().eq('id', id);
+
+    return {
+      isSuccess: true,
+      isLoading: false,
+      isError: !!error,
+    };
+  };
+
+  return { fetchVocabularies, updateVocabulary, deleteVocabulary };
 }

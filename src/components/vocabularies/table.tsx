@@ -14,6 +14,7 @@ import { useModal } from '@ebay/nice-modal-react';
 import VocabularyEditModal from '@/components/modals/vocabulary/edit';
 import useThemeManager from '@/managers/theme/manager';
 import useVocabularyManager from '@/managers/vocabulary/manager';
+import VocabularyDeleteModal from '@/components/modals/vocabulary/delete';
 
 const paginationModel = { page: 0, pageSize: 10 };
 
@@ -23,19 +24,33 @@ type VocabulariesTable = {
 
 export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
   const vocabularyEditModal = useModal(VocabularyEditModal);
-  const { updateVocabulary } = useVocabularyManager();
-  const { updateVocabularyThemeId } = useThemeManager();
+  const vocabularyDeleteModal = useModal(VocabularyDeleteModal);
+
+  const { updateVocabulary, deleteVocabulary } = useVocabularyManager();
+  const { updateVocabularyByThemeId, deleteVocabularyByThemeId } =
+    useThemeManager();
 
   const handleUpdateVocabulary = useCallback(
     async (params: Vocabulary) => {
       const { flags, data } = await updateVocabulary(params);
 
       if (flags.isSuccess && !!data) {
-        updateVocabularyThemeId(data);
+        updateVocabularyByThemeId(data);
       }
     },
-    [updateVocabulary, updateVocabularyThemeId],
+    [updateVocabulary, updateVocabularyByThemeId],
   );
+  const handleDeleteVocabulary = useCallback(
+    async (vocabularyId: string, themeId: string) => {
+      const { isSuccess } = await deleteVocabulary(vocabularyId);
+
+      if (isSuccess) {
+        deleteVocabularyByThemeId(vocabularyId, themeId);
+      }
+    },
+    [deleteVocabulary, deleteVocabularyByThemeId],
+  );
+
   const columns: GridColDef[] = useMemo(() => {
     return [
       { field: 'vocabulary', headerName: 'Vocabulary', width: 130 },
@@ -88,12 +103,24 @@ export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
               icon={<DeleteIcon color="error" />}
               label="Delete"
               color="inherit"
+              onClick={() => {
+                vocabularyDeleteModal.show({
+                  id: row.id,
+                  onSubmit: async (vocabularyId) =>
+                    await handleDeleteVocabulary(vocabularyId, row.themeId),
+                });
+              }}
             />,
           ];
         },
       },
     ];
-  }, [handleUpdateVocabulary, vocabularyEditModal]);
+  }, [
+    handleDeleteVocabulary,
+    handleUpdateVocabulary,
+    vocabularyDeleteModal,
+    vocabularyEditModal,
+  ]);
 
   return (
     <DataGrid

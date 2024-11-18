@@ -13,4 +13,5 @@ export type VocabularyApiService = {
     data: Vocabulary | null;
     flags: ApiStatus;
   }>;
+  deleteVocabulary: (id: string) => Promise<ApiStatus>;
 };

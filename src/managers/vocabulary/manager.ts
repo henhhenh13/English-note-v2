@@ -3,9 +3,10 @@ import { VocabularyApiService } from '@/managers/vocabulary/interface';
 
 type UseVocabularyManager = {
   updateVocabulary: VocabularyApiService['updateVocabulary'];
+  deleteVocabulary: VocabularyApiService['deleteVocabulary'];
 };
 
 export default function useVocabularyManager(): UseVocabularyManager {
-  const { updateVocabulary } = useVocabularyApi();
-  return { updateVocabulary };
+  const { updateVocabulary, deleteVocabulary } = useVocabularyApi();
+  return { updateVocabulary, deleteVocabulary };
 }
