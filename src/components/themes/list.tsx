@@ -1,8 +1,7 @@
 import { useCallback, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import { Box, Stack, Typography, Pagination } from '@mui/material';
-import VocabulariesTable from '@/components/vocabularies/table';
+import { Box, Stack, Pagination } from '@mui/material';
 import useThemeManager from '@/managers/theme/manager';
+import ThemeItem from '@/components/themes/item';
 
 export default function ThemeList() {
   const { themes, flags } = useThemeManager();
@@ -23,22 +22,7 @@ export default function ThemeList() {
     <Stack spacing={4}>
       <Stack useFlexGap sx={{ flexWrap: 'wrap' }} direction="row" spacing={4}>
         {flags.isSuccess && paginatedThemes.length
-          ? paginatedThemes.map(({ title, description, vocabularies, id }) => (
-              <Paper key={id} sx={{ width: '45%', p: 2 }} elevation={6}>
-                <Stack spacing={1}>
-                  <Typography variant="h5">{title}</Typography>
-                  {description && (
-                    <Typography variant="body2">{description}</Typography>
-                  )}
-                  <Box sx={{ height: 640 }}>
-                    <VocabulariesTable
-                      themeId={id}
-                      vocabularies={vocabularies}
-                    />
-                  </Box>
-                </Stack>
-              </Paper>
-            ))
+          ? paginatedThemes.map((item) => <ThemeItem key={item.id} {...item} />)
           : null}
       </Stack>
       {flags.isSuccess && themes.length > itemsPerPage && (
