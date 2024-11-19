@@ -31,7 +31,10 @@ export default function ThemeList() {
                     <Typography variant="body2">{description}</Typography>
                   )}
                   <Box sx={{ height: 640 }}>
-                    <VocabulariesTable vocabularies={vocabularies} />
+                    <VocabulariesTable
+                      themeId={id}
+                      vocabularies={vocabularies}
+                    />
                   </Box>
                 </Stack>
               </Paper>
