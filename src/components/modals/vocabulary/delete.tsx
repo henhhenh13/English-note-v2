@@ -15,6 +15,9 @@ const VocabularyDeleteModal = NiceModal.create(
       <ModalContainer
         title="Vocabulary Delete"
         open={visible}
+        submitButtonColor="error"
+        titleColor="error"
+        submitButtonTitle="Delete"
         onClose={remove}
         onSubmit={async () => {
           await onSubmit(id);

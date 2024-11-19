@@ -3,32 +3,45 @@ import {
   DataGrid,
   GridActionsCellItem,
   GridColDef,
+  GridPagination,
   GridRowParams,
 } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { Tooltip } from '@mui/material';
+import { Button, Stack, Tooltip } from '@mui/material';
 import { useCallback, useMemo } from 'react';
 import { useModal } from '@ebay/nice-modal-react';
 import VocabularyEditModal from '@/components/modals/vocabulary/edit';
 import useThemeManager from '@/managers/theme/manager';
 import useVocabularyManager from '@/managers/vocabulary/manager';
 import VocabularyDeleteModal from '@/components/modals/vocabulary/delete';
+import useToastManager from '@/hooks/use-toast';
+import VocabularyAddModal from '@/components/modals/vocabulary/add';
 
 const paginationModel = { page: 0, pageSize: 10 };
 
 type VocabulariesTable = {
+  themeId: string;
   vocabularies: Vocabulary[];
 };
 
-export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
+export default function VocabulariesTable({
+  themeId,
+  vocabularies,
+}: VocabulariesTable) {
   const vocabularyEditModal = useModal(VocabularyEditModal);
   const vocabularyDeleteModal = useModal(VocabularyDeleteModal);
+  const vocabularyAddModal = useModal(VocabularyAddModal);
 
-  const { updateVocabulary, deleteVocabulary } = useVocabularyManager();
-  const { updateVocabularyByThemeId, deleteVocabularyByThemeId } =
-    useThemeManager();
+  const { updateVocabulary, deleteVocabulary, addVocabulary } =
+    useVocabularyManager();
+  const {
+    updateVocabularyByThemeId,
+    deleteVocabularyByThemeId,
+    addVocabularyByThemeId,
+  } = useThemeManager();
+  const { successToast } = useToastManager();
 
   const handleUpdateVocabulary = useCallback(
     async (params: Vocabulary) => {
@@ -36,9 +49,10 @@ export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
 
       if (flags.isSuccess && !!data) {
         updateVocabularyByThemeId(data);
+        successToast('You was edited!');
       }
     },
-    [updateVocabulary, updateVocabularyByThemeId],
+    [successToast, updateVocabulary, updateVocabularyByThemeId],
   );
   const handleDeleteVocabulary = useCallback(
     async (vocabularyId: string, themeId: string) => {
@@ -46,9 +60,31 @@ export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
 
       if (isSuccess) {
         deleteVocabularyByThemeId(vocabularyId, themeId);
+        successToast('You was deleted!');
       }
     },
-    [deleteVocabulary, deleteVocabularyByThemeId],
+    [deleteVocabulary, deleteVocabularyByThemeId, successToast],
+  );
+
+  const handleAddVocabulary = useCallback(
+    async ({
+      vocabulary,
+      translation,
+      description,
+    }: Omit<Vocabulary, 'id' | 'themeId'>) => {
+      const { data, flags } = await addVocabulary({
+        vocabulary,
+        themeId,
+        translation,
+        description,
+      });
+
+      if (!!data && flags.isSuccess) {
+        addVocabularyByThemeId(data);
+        successToast('You was added!');
+      }
+    },
+    [addVocabulary, addVocabularyByThemeId, successToast, themeId],
   );
 
   const columns: GridColDef[] = useMemo(() => {
@@ -134,6 +170,24 @@ export default function VocabulariesTable({ vocabularies }: VocabulariesTable) {
       disableColumnSorting
       disableDensitySelector
       disableRowSelectionOnClick
+      slots={{
+        footer: () => {
+          return (
+            <Stack direction="row" sx={{ px: 1, pb: 0.5 }}>
+              <Button
+                onClick={() => {
+                  vocabularyAddModal.show({
+                    onSubmit: handleAddVocabulary,
+                  });
+                }}
+              >
+                Add vocabulary
+              </Button>
+              <GridPagination />
+            </Stack>
+          );
+        },
+      }}
     />
   );
 }

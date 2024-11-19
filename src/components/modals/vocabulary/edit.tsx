@@ -1,7 +1,7 @@
 import ModalContainer from '@/components/modals/container';
 import { Vocabulary } from '@/managers/vocabulary/interface';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import { Stack, TextareaAutosize, TextField } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import { useState } from 'react';
 
 type VocabularyEditModalProps = {
@@ -50,10 +50,10 @@ const VocabularyEditModal = NiceModal.create(
             value={newTranslation}
             onChange={(e) => setNewTranslation(e.target.value)}
           />
-          <TextareaAutosize
-            minRows={5}
-            aria-label="empty textarea"
-            placeholder="Description"
+          <TextField
+            variant="outlined"
+            multiline
+            label="Translation"
             value={newDescription || ''}
             onChange={(e) => setNewDescription(e.target.value)}
           />

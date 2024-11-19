@@ -10,6 +10,7 @@ type UseVocabularyApi = {
   fetchVocabularies: () => Promise<void>;
   updateVocabulary: VocabularyApiService['updateVocabulary'];
   deleteVocabulary: VocabularyApiService['deleteVocabulary'];
+  addVocabulary: VocabularyApiService['addVocabulary'];
 };
 export default function useVocabularyApi(): UseVocabularyApi {
   const fetchVocabularies = async () => {
@@ -31,7 +32,7 @@ export default function useVocabularyApi(): UseVocabularyApi {
     return {
       data: camelize(data),
       flags: {
-        isSuccess: true,
+        isSuccess: !!data,
         isLoading: false,
         isError: !!error,
       },
@@ -50,5 +51,29 @@ export default function useVocabularyApi(): UseVocabularyApi {
     };
   };
 
-  return { fetchVocabularies, updateVocabulary, deleteVocabulary };
+  const addVocabulary: VocabularyApiService['addVocabulary'] = async (
+    params,
+  ) => {
+    const { data, error } = await supabase
+      .from('vocabularies')
+      .insert({ ...snakify(params) })
+      .select<string, Vocabulary>('*')
+      .single();
+
+    return {
+      data: camelize(data),
+      flags: {
+        isSuccess: !!data,
+        isLoading: false,
+        isError: !!error,
+      },
+    };
+  };
+
+  return {
+    fetchVocabularies,
+    updateVocabulary,
+    deleteVocabulary,
+    addVocabulary,
+  };
 }

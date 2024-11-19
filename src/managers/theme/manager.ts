@@ -10,6 +10,7 @@ type UseThemeManager = {
   fetchThemes: () => Promise<ApiStatus>;
   themes: ThemeCollection['list'];
   flags: ThemeCollection['flags'];
+  addVocabularyByThemeId: (vocabulary: Vocabulary) => void
   updateVocabularyByThemeId: (vocabulary: Vocabulary) => void
   deleteVocabularyByThemeId: (vocabularyId: string, themeId: string) => void
 };
@@ -37,6 +38,26 @@ export default function useThemeManager(): UseThemeManager {
 
     return flags;
   }, [fetchThemesApi, setThemeState]);
+
+  const addVocabularyByThemeId = useCallback(
+    async (vocabulary: Vocabulary) => {
+      setThemeState((prevState) => {
+        const themeId = vocabulary.themeId
+        const currentTheme = prevState.list.get(themeId);
+        if (currentTheme) {
+          const newVocabularies = [...currentTheme.vocabularies, vocabulary];
+
+          prevState.list.set(themeId, {
+            ...currentTheme,
+            vocabularies: newVocabularies,
+          });
+        }
+
+        return { ...prevState };
+      });
+    },
+    [setThemeState],
+  );
 
   const updateVocabularyByThemeId = useCallback(
     async (vocabulary: Vocabulary) => {
@@ -86,6 +107,7 @@ export default function useThemeManager(): UseThemeManager {
     themes: themeCollection.list,
     flags: themeCollection.flags,
     updateVocabularyByThemeId,
-    deleteVocabularyByThemeId
+    deleteVocabularyByThemeId,
+    addVocabularyByThemeId
   };
 }

@@ -9,6 +9,15 @@ export type Vocabulary = {
 };
 
 export type VocabularyApiService = {
+  addVocabulary: (params: {
+    themeId: string;
+    vocabulary: string;
+    translation: string;
+    description: string | null;
+  }) => Promise<{
+    data: Vocabulary | null;
+    flags: ApiStatus;
+  }>;
   updateVocabulary: (params: Vocabulary) => Promise<{
     data: Vocabulary | null;
     flags: ApiStatus;

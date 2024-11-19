@@ -10,10 +10,16 @@ type ModalContainer = {
   title?: string;
   onClose: () => void;
   onSubmit?: () => Promise<void>;
+  submitButtonColor?: 'error' | 'primary';
+  titleColor?: 'error' | 'primary';
+  submitButtonTitle?: string;
 };
 export default function ModalContainer({
   open,
   title,
+  submitButtonColor = 'primary',
+  titleColor = 'primary',
+  submitButtonTitle = 'Save changes',
   children,
   onClose,
   onSubmit,
@@ -21,7 +27,7 @@ export default function ModalContainer({
   return (
     <Dialog closeAfterTransition open={open} maxWidth="lg" onClose={onClose}>
       <DialogTitle
-        color="primary"
+        color={titleColor}
         sx={{ m: 0, p: 2 }}
         id="customized-dialog-title"
       >
@@ -43,11 +49,11 @@ export default function ModalContainer({
 
       <DialogActions>
         {onSubmit && (
-          <Button onClick={onSubmit} color="primary" autoFocus>
-            Save changes
+          <Button onClick={onSubmit} color={submitButtonColor} autoFocus>
+            {submitButtonTitle}
           </Button>
         )}
-        <Button onClick={onClose} autoFocus>
+        <Button onClick={onClose} color="info" autoFocus>
           Close
         </Button>
       </DialogActions>
