@@ -25,7 +25,7 @@ export default function Sidebar() {
         icon: LocalLibraryIcon,
       },
       {
-        title: 'Vocabularies',
+        title: 'Vocabulary',
         key: 'vocabulary',
         icon: GTranslateIcon,
       },

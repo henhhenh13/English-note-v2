@@ -1,58 +1,93 @@
-import { useCallback, useState } from 'react';
-import Paper from '@mui/material/Paper';
-import { Box, Stack, Typography, Pagination } from '@mui/material';
-import VocabulariesTable from '@/components/vocabularies/table';
+import { useCallback, useMemo, useState } from 'react';
+import { Box, Stack, Pagination, Typography, Button } from '@mui/material';
 import useThemeManager from '@/managers/theme/manager';
+import ThemeItem from '@/components/themes/item';
+import useToastManager from '@/hooks/use-toast';
+import { useModal } from '@ebay/nice-modal-react';
+import ThemeAddModal from '@/components/modals/theme/add';
+
+const ITEMS_PER_PAGE = 2;
 
 export default function ThemeList() {
-  const { themes, flags } = useThemeManager();
+  const { themes, flags, addTheme } = useThemeManager();
+  const themeAddModal = useModal(ThemeAddModal);
+
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const { successToast } = useToastManager();
 
-  const totalPages = Math.ceil(themes.length / itemsPerPage);
-  const paginatedThemes = themes.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
+  const totalPages = useMemo(() => {
+    return Math.ceil(themes.length / ITEMS_PER_PAGE);
+  }, [themes.length]);
 
-  const handlePageChange = useCallback((_e: unknown, page: number) => {
+  const paginatedThemes = useMemo(() => {
+    return themes.slice(
+      (currentPage - 1) * ITEMS_PER_PAGE,
+      currentPage * ITEMS_PER_PAGE,
+    );
+  }, [themes, currentPage]);
+
+  const handlePageChange = useCallback((_event: unknown, page: number) => {
     setCurrentPage(page);
   }, []);
 
+  const shouldShowPagination = useMemo(() => {
+    return flags.isSuccess && themes.length > ITEMS_PER_PAGE;
+  }, [flags.isSuccess, themes.length]);
+
+  const handleAddTheme = useCallback(
+    async (title: string, description: string) => {
+      const { isSuccess } = await addTheme(title, description);
+      if (isSuccess) {
+        successToast('Theme added successfully');
+        setCurrentPage(Math.ceil((themes.length + 1) / ITEMS_PER_PAGE));
+      }
+    },
+    [addTheme, successToast, themes.length],
+  );
+
   return (
-    <Stack spacing={4}>
-      <Stack useFlexGap sx={{ flexWrap: 'wrap' }} direction="row" spacing={4}>
-        {flags.isSuccess && paginatedThemes.length
-          ? paginatedThemes.map(({ title, description, vocabularies, id }) => (
-              <Paper key={id} sx={{ width: '45%', p: 2 }} elevation={6}>
-                <Stack spacing={1}>
-                  <Typography variant="h5">{title}</Typography>
-                  {description && (
-                    <Typography variant="body2">{description}</Typography>
-                  )}
-                  <Box sx={{ height: 640 }}>
-                    <VocabulariesTable
-                      themeId={id}
-                      vocabularies={vocabularies}
-                    />
-                  </Box>
-                </Stack>
-              </Paper>
-            ))
-          : null}
+    <div>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h5" gutterBottom>
+          Themes
+        </Typography>
+
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => themeAddModal.show({ onSubmit: handleAddTheme })}
+        >
+          Add Theme
+        </Button>
       </Stack>
-      {flags.isSuccess && themes.length > itemsPerPage && (
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-          <Pagination
-            count={totalPages}
-            page={currentPage}
-            onChange={handlePageChange}
-            color="primary"
-            variant="outlined"
-            shape="rounded"
-          />
-        </Box>
-      )}
-    </Stack>
+
+      <Stack spacing={4}>
+        <Stack direction="row" spacing={4} sx={{ flexWrap: 'wrap' }}>
+          {flags.isSuccess &&
+            paginatedThemes.length > 0 &&
+            paginatedThemes.map((theme) => (
+              <ThemeItem key={theme.id} {...theme} />
+            ))}
+        </Stack>
+
+        {shouldShowPagination && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+            <Pagination
+              count={totalPages}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+              variant="outlined"
+              shape="rounded"
+            />
+          </Box>
+        )}
+      </Stack>
+    </div>
   );
 }

@@ -19,8 +19,6 @@ import VocabularyDeleteModal from '@/components/modals/vocabulary/delete';
 import useToastManager from '@/hooks/use-toast';
 import VocabularyAddModal from '@/components/modals/vocabulary/add';
 
-const paginationModel = { page: 0, pageSize: 10 };
-
 type VocabulariesTable = {
   themeId: string;
   vocabularies: Vocabulary[];
@@ -162,7 +160,6 @@ export default function VocabulariesTable({
     <DataGrid
       rows={vocabularies}
       columns={columns}
-      initialState={{ pagination: { paginationModel } }}
       pagination
       disableColumnMenu
       disableColumnFilter
@@ -170,6 +167,12 @@ export default function VocabulariesTable({
       disableColumnSorting
       disableDensitySelector
       disableRowSelectionOnClick
+      pageSizeOptions={[10]}
+      initialState={{
+        pagination: {
+          paginationModel: { page: 0, pageSize: 10 },
+        },
+      }}
       slots={{
         footer: () => {
           return (
