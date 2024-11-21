@@ -7,6 +7,16 @@ export type Grammar = {
   content: string;
 };
 
+export type GrammarState = {
+  list: Map<string, Grammar>;
+  flags: ApiStatus;
+};
+
+export type GrammarSelector = {
+  list: Grammar[];
+  flags: ApiStatus;
+};
+
 export type GrammarApiService = {
   fetchGrammars: () => Promise<{
     data: Grammar[];
