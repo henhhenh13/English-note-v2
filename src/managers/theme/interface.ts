@@ -8,13 +8,18 @@ export type Theme = {
   vocabularies: Vocabulary[];
 };
 
-export type ThemeCollection = {
+export type ThemeState = {
+  list: Map<string, Theme>;
+  flags: ApiStatus;
+};
+
+export type ThemesSelector = {
   list: Theme[];
   flags: ApiStatus;
 };
 
 export type ThemeApiService = {
-  fetchThemes: () => Promise<ThemeCollection>;
+  fetchThemes: () => Promise<ThemesSelector>;
   updateTheme: (
     id: string,
     title: string,
