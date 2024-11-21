@@ -6,7 +6,7 @@ import { atom, selector } from 'recoil';
 export const THEMES_STATE = atom<ThemeState>({
   key: 'themesState',
   default: {
-    list: new Map(),
+    themes: new Map(),
     flags: {
       isLoading: true,
       isSuccess: false,
@@ -18,11 +18,11 @@ export const THEMES_STATE = atom<ThemeState>({
 export const THEMES_SELECTOR = selector<ThemesSelector>({
   key: 'themesSelector',
   get: ({ get }) => {
-    const { list, flags } = get(THEMES_STATE);
+    const { themes, flags } = get(THEMES_STATE);
 
 
     return {
-      list: Array.from(list.values()).map((item) => item),
+      themes: Array.from(themes.values()).map((item) => item),
       flags,
     };
   },

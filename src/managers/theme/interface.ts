@@ -9,12 +9,12 @@ export type Theme = {
 };
 
 export type ThemeState = {
-  list: Map<string, Theme>;
+  themes: Map<string, Theme>;
   flags: ApiStatus;
 };
 
 export type ThemesSelector = {
-  list: Theme[];
+  themes: Theme[];
   flags: ApiStatus;
 };
 

@@ -16,7 +16,7 @@ export default function useThemeApi(): UseThemeApi {
       .select<string, Theme>('*, vocabularies(*)');
 
     return {
-      list: camelize(data) || [],
+      themes: camelize(data) || [],
       flags: {
         isLoading: false,
         isSuccess: !!data,
