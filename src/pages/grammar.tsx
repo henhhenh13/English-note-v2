@@ -1,4 +1,4 @@
-import GrammarsList from '@/components/grammars/list';
+import GrammarsContainer from '@/components/grammars/container';
 import useGrammarManager from '@/managers/grammar/manager';
 import { useEffect } from 'react';
 
@@ -10,5 +10,5 @@ export default function GrammarPage() {
     }
   }, [fetchGrammars, flags.isLoading]);
 
-  return <GrammarsList />;
+  return <>{flags.isLoading ? null : <GrammarsContainer />}</>;
 }
