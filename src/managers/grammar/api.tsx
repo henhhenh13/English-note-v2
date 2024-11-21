@@ -7,9 +7,22 @@ type UseGrammarApiService = {
   addGrammar: GrammarApiService['addGrammar'];
   updateGrammar: GrammarApiService['updateGrammar'];
   deleteGrammar: GrammarApiService['deleteGrammar'];
+  fetchGrammars: GrammarApiService['fetchGrammars'];
 };
 
 export default function useGrammarApiService(): UseGrammarApiService {
+  const fetchGrammars: GrammarApiService['fetchGrammars'] = async () => {
+    const { data, error } = await supabase.from('grammars').select('*');
+    return {
+      data: data || [],
+      flags: {
+        isLoading: false,
+        isError: !!error,
+        isSuccess: !!data,
+      },
+    };
+  };
+
   const addGrammar: UseGrammarApiService['addGrammar'] = async (params: {
     title: string;
     description: string;
@@ -66,5 +79,6 @@ export default function useGrammarApiService(): UseGrammarApiService {
     addGrammar,
     updateGrammar,
     deleteGrammar,
+    fetchGrammars,
   };
 }
