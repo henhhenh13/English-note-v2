@@ -14,7 +14,7 @@ type UseGrammarManager = {
   deleteGrammar: (id: string) => Promise<ApiStatus>;
   fetchGrammars: () => Promise<ApiStatus>;
   flags: GrammarSelector['flags'];
-  list: GrammarSelector['list'];
+  grammars: GrammarSelector['grammars'];
 };
 
 export default function useGrammarManager(): UseGrammarManager {
@@ -24,7 +24,7 @@ export default function useGrammarManager(): UseGrammarManager {
     deleteGrammar: deleteGrammarApi,
     fetchGrammars: fetchGrammarsApi,
   } = useGrammarApiService();
-  const { flags, list } = useRecoilValue(GRAMMAR_SELECTOR);
+  const { flags, grammars } = useRecoilValue(GRAMMAR_SELECTOR);
   const setGrammarState = useSetRecoilState(GRAMMAR_STATE);
 
   const fetchGrammars = useCallback(async () => {
@@ -33,7 +33,7 @@ export default function useGrammarManager(): UseGrammarManager {
     if (!!data && flags.isSuccess) {
       setGrammarState((prevState) => {
         data.forEach((grammar) => {
-          prevState.list.set(grammar.id, grammar);
+          prevState.grammars.set(grammar.id, grammar);
         });
 
         return {
@@ -51,7 +51,7 @@ export default function useGrammarManager(): UseGrammarManager {
       const { data, flags } = await addGrammarApi(params);
       if (!!data && flags.isSuccess) {
         setGrammarState((prevState) => {
-          prevState.list.set(data.id, data);
+          prevState.grammars.set(data.id, data);
           return { ...prevState, flags };
         });
       }
@@ -65,7 +65,7 @@ export default function useGrammarManager(): UseGrammarManager {
       const { data, flags } = await updateGrammarApi(params);
       if (!!data && flags.isSuccess) {
         setGrammarState((prevState) => {
-          prevState.list.set(data.id, data);
+          prevState.grammars.set(data.id, data);
           return { ...prevState, flags };
         });
       }
@@ -79,7 +79,7 @@ export default function useGrammarManager(): UseGrammarManager {
       const flags = await deleteGrammarApi(id);
       if (flags.isSuccess) {
         setGrammarState((prevState) => {
-          prevState.list.delete(id);
+          prevState.grammars.delete(id);
           return { ...prevState, flags };
         });
       }
@@ -94,6 +94,6 @@ export default function useGrammarManager(): UseGrammarManager {
     deleteGrammar,
     fetchGrammars,
     flags,
-    list,
+    grammars,
   };
 }

@@ -1,3 +1,4 @@
+import GrammarsList from '@/components/grammars/list';
 import useGrammarManager from '@/managers/grammar/manager';
 import { useEffect } from 'react';
 
@@ -9,5 +10,5 @@ export default function GrammarPage() {
     }
   }, [fetchGrammars, flags.isLoading]);
 
-  return <div>Grammar</div>;
+  return <GrammarsList />;
 }

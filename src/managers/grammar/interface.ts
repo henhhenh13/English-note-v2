@@ -8,12 +8,12 @@ export type Grammar = {
 };
 
 export type GrammarState = {
-  list: Map<string, Grammar>;
+  grammars: Map<string, Grammar>;
   flags: ApiStatus;
 };
 
 export type GrammarSelector = {
-  list: Grammar[];
+  grammars: Grammar[];
   flags: ApiStatus;
 };
 

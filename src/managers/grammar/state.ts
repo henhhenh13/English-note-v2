@@ -4,7 +4,7 @@ import { atom, selector } from 'recoil';
 export const GRAMMAR_STATE = atom<GrammarState>({
   key: 'GRAMMAR_STATE',
   default: {
-    list: new Map(),
+    grammars: new Map(),
     flags: {
       isLoading: true,
       isError: false,
@@ -16,9 +16,9 @@ export const GRAMMAR_STATE = atom<GrammarState>({
 export const GRAMMAR_SELECTOR = selector<GrammarSelector>({
   key: 'GRAMMAR_SELECTOR',
   get: ({ get }) => {
-    const { list, flags } = get(GRAMMAR_STATE);
+    const { grammars, flags } = get(GRAMMAR_STATE);
     return {
-      list: Array.from(list.values()).map((item) => item),
+      grammars: Array.from(grammars.values()).map((item) => item),
       flags,
     };
   },
