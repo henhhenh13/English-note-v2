@@ -5,6 +5,7 @@ import ThemeItem from '@/components/themes/item';
 import useToastManager from '@/hooks/use-toast';
 import { useModal } from '@ebay/nice-modal-react';
 import ThemeAddModal from '@/components/modals/theme/add';
+import { Theme } from '@/managers/theme/interface';
 
 const ITEMS_PER_PAGE = 2;
 
