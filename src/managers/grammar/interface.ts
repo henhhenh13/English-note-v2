@@ -8,6 +8,10 @@ export type Grammar = {
 };
 
 export type GrammarApiService = {
+  fetchGrammars: () => Promise<{
+    data: Grammar[];
+    flags: ApiStatus;
+  }>;
   addGrammar: (params: {
     title: string;
     description: string;
