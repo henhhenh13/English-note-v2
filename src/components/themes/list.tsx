@@ -70,7 +70,7 @@ export default function ThemeList() {
         <Stack direction="row" spacing={4} sx={{ flexWrap: 'wrap' }}>
           {flags.isSuccess &&
             paginatedThemes.length > 0 &&
-            paginatedThemes.map((theme) => (
+            paginatedThemes.map((theme: Theme) => (
               <ThemeItem key={theme.id} {...theme} />
             ))}
         </Stack>
