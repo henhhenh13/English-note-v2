@@ -19,7 +19,10 @@ export type ThemesSelector = {
 };
 
 export type ThemeApiService = {
-  fetchThemes: () => Promise<ThemesSelector>;
+  fetchThemes: () => Promise<{
+    data: Theme[];
+    flags: ApiStatus;
+  }>;
   updateTheme: (
     id: string,
     title: string,

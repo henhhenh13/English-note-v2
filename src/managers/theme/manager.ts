@@ -30,14 +30,14 @@ export default function useThemeManager(): UseThemeManager {
     deleteTheme: deleteThemeThemeApi,
   } = useThemeApi();
   const setThemeState = useSetRecoilState(THEMES_STATE);
-  const {themes, flags} = useRecoilValue(THEMES_SELECTOR);
+  const { themes, flags } = useRecoilValue(THEMES_SELECTOR);
 
   const fetchThemes = useCallback(async () => {
-    const { themes, flags } = await fetchThemesApi();
+    const { data, flags } = await fetchThemesApi();
 
-    if (!!themes && flags.isSuccess) {
+    if (flags.isSuccess) {
       setThemeState((prevState) => {
-        themes.forEach((item) => {
+        data.forEach((item) => {
           prevState.themes.set(item.id, item);
         });
 
