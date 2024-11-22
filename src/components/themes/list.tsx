@@ -5,6 +5,7 @@ import ThemeItem from '@/components/themes/item';
 import useToastManager from '@/hooks/use-toast';
 import { useModal } from '@ebay/nice-modal-react';
 import ThemeAddModal from '@/components/modals/theme/add';
+import { Theme } from '@/managers/theme/interface';
 
 const ITEMS_PER_PAGE = 2;
 
@@ -70,7 +71,7 @@ export default function ThemeList() {
         <Stack direction="row" spacing={4} sx={{ flexWrap: 'wrap' }}>
           {flags.isSuccess &&
             paginatedThemes.length > 0 &&
-            paginatedThemes.map((theme) => (
+            paginatedThemes.map((theme: Theme) => (
               <ThemeItem key={theme.id} {...theme} />
             ))}
         </Stack>

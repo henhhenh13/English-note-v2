@@ -1,6 +1,6 @@
 import { ApiStatus } from '@/contains/type';
 import useThemeApi from '@/managers/theme/api';
-import { ThemeCollection } from '@/managers/theme/interface';
+import { ThemesSelector } from '@/managers/theme/interface';
 import { THEMES_SELECTOR, THEMES_STATE } from '@/managers/theme/state';
 import { Vocabulary } from '@/managers/vocabulary/interface';
 import { useCallback } from 'react';
@@ -15,8 +15,8 @@ type UseThemeManager = {
     description: string,
   ) => Promise<ApiStatus>;
   deleteTheme: (id: string) => Promise<ApiStatus>;
-  themes: ThemeCollection['list'];
-  flags: ThemeCollection['flags'];
+  themes: ThemesSelector['themes'];
+  flags: ThemesSelector['flags'];
   addVocabularyByThemeId: (vocabulary: Vocabulary) => void;
   updateVocabularyByThemeId: (vocabulary: Vocabulary) => void;
   deleteVocabularyByThemeId: (vocabularyId: string, themeId: string) => void;
@@ -30,15 +30,15 @@ export default function useThemeManager(): UseThemeManager {
     deleteTheme: deleteThemeThemeApi,
   } = useThemeApi();
   const setThemeState = useSetRecoilState(THEMES_STATE);
-  const themeCollection = useRecoilValue(THEMES_SELECTOR);
+  const { themes, flags } = useRecoilValue(THEMES_SELECTOR);
 
   const fetchThemes = useCallback(async () => {
-    const { list, flags } = await fetchThemesApi();
+    const { data, flags } = await fetchThemesApi();
 
     if (flags.isSuccess) {
       setThemeState((prevState) => {
-        list.forEach((item) => {
-          prevState.list.set(item.id, item);
+        data.forEach((item) => {
+          prevState.themes.set(item.id, item);
         });
 
         return {
@@ -56,7 +56,7 @@ export default function useThemeManager(): UseThemeManager {
       const { data, flags } = await addThemeApi(title, description);
       if (!!data && flags.isSuccess) {
         setThemeState((prevState) => {
-          prevState.list.set(data.id, data);
+          prevState.themes.set(data.id, data);
 
           return { ...prevState };
         });
@@ -72,7 +72,7 @@ export default function useThemeManager(): UseThemeManager {
       const { data, flags } = await updateThemeApi(id, title, description);
       if (!!data && flags.isSuccess) {
         setThemeState((prevState) => {
-          prevState.list.set(id, data);
+          prevState.themes.set(id, data);
 
           return { ...prevState };
         });
@@ -88,7 +88,7 @@ export default function useThemeManager(): UseThemeManager {
       const flags = await deleteThemeThemeApi(id);
       if (flags.isSuccess) {
         setThemeState((prevState) => {
-          prevState.list.delete(id);
+          prevState.themes.delete(id);
 
           return { ...prevState };
         });
@@ -103,11 +103,11 @@ export default function useThemeManager(): UseThemeManager {
     async (vocabulary: Vocabulary) => {
       setThemeState((prevState) => {
         const themeId = vocabulary.themeId;
-        const currentTheme = prevState.list.get(themeId);
+        const currentTheme = prevState.themes.get(themeId);
         if (currentTheme) {
           const newVocabularies = [...currentTheme.vocabularies, vocabulary];
 
-          prevState.list.set(themeId, {
+          prevState.themes.set(themeId, {
             ...currentTheme,
             vocabularies: newVocabularies,
           });
@@ -123,13 +123,13 @@ export default function useThemeManager(): UseThemeManager {
     async (vocabulary: Vocabulary) => {
       setThemeState((prevState) => {
         const themeId = vocabulary.themeId;
-        const currentTheme = prevState.list.get(themeId);
+        const currentTheme = prevState.themes.get(themeId);
         if (currentTheme) {
           const newVocabularies = currentTheme?.vocabularies.map((item) => {
             return item.id === vocabulary.id ? vocabulary : item;
           });
 
-          prevState.list.set(themeId, {
+          prevState.themes.set(themeId, {
             ...currentTheme,
             vocabularies: newVocabularies,
           });
@@ -144,13 +144,13 @@ export default function useThemeManager(): UseThemeManager {
   const deleteVocabularyByThemeId = useCallback(
     async (vocabularyId: string, themeId: string) => {
       setThemeState((prevState) => {
-        const currentTheme = prevState.list.get(themeId);
+        const currentTheme = prevState.themes.get(themeId);
         if (currentTheme) {
           const newVocabularies = currentTheme.vocabularies.filter((item) => {
             return item.id !== vocabularyId;
           });
 
-          prevState.list.set(themeId, {
+          prevState.themes.set(themeId, {
             ...currentTheme,
             vocabularies: newVocabularies,
           });
@@ -164,8 +164,8 @@ export default function useThemeManager(): UseThemeManager {
 
   return {
     fetchThemes,
-    themes: themeCollection.list,
-    flags: themeCollection.flags,
+    themes,
+    flags,
     updateVocabularyByThemeId,
     deleteVocabularyByThemeId,
     addVocabularyByThemeId,
