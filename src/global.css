@@ -20,8 +20,8 @@ body {
 }
 
 .editor-container_classic-editor .editor-container__editor {
-	min-width: 595px;
-	max-width: 595px;
+	min-width: 750px;
+	max-width: 750px;
 }
 
 .ck-editor__main .ck-editor__editable {
