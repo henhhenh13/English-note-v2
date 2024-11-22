@@ -1,3 +1,4 @@
+import UnitList from '@/components/units/list';
 import useUnitsManager from '@/managers/unit/manager';
 import { useEffect } from 'react';
 
@@ -10,5 +11,5 @@ export default function UnitPage() {
     }
   }, [fetchUnits, flags.isLoading]);
 
-  return <div>Unit</div>;
+  return <>{flags.isSuccess && <UnitList />}</>;
 }
