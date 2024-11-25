@@ -7,13 +7,20 @@ import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
+import YouTubeIcon from '@mui/icons-material/YouTube';
 type VideoViewModalProps = {
   url: string;
+  title: string;
   description: string;
   id: string;
 };
 const VideoViewModal = NiceModal.create(
-  ({ url, description, id }: VideoViewModalProps): React.ReactElement => {
+  ({
+    url,
+    title,
+    description,
+    id,
+  }: VideoViewModalProps): React.ReactElement => {
     const { visible, remove } = useModal();
     const { getVideoNotesByVideoId, addVideoNote, deleteVideoNoteById } =
       useVideoNoteManager();
@@ -61,11 +68,12 @@ const VideoViewModal = NiceModal.create(
 
     return (
       <ModalContainer
-        title="Video View"
+        title={title}
         submitButtonTitle="Add"
         open={visible}
         onClose={remove}
         maxWidth="xl"
+        titleIcon={YouTubeIcon}
       >
         <Stack
           spacing={2}

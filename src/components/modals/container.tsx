@@ -9,10 +9,11 @@ import {
   DialogContent,
   Divider,
 } from '@mui/material';
-
+import { SvgIconComponent } from '@mui/icons-material';
 type ModalContainer = {
   open: boolean;
   title?: string;
+  titleIcon?: SvgIconComponent;
   onClose: () => void;
   onSubmit?: () => Promise<void>;
   submitButtonColor?: 'error' | 'primary';
@@ -23,6 +24,7 @@ type ModalContainer = {
 export default function ModalContainer({
   open,
   title,
+  titleIcon: TitleIcon,
   submitButtonColor = 'primary',
   titleColor = 'primary',
   submitButtonTitle = 'Save changes',
@@ -40,9 +42,10 @@ export default function ModalContainer({
     >
       <DialogTitle
         color={titleColor}
-        sx={{ m: 0, p: 2 }}
+        sx={{ m: 0, p: 2, display: 'flex', alignItems: 'center' }}
         id="customized-dialog-title"
       >
+        {TitleIcon && <TitleIcon sx={{ mr: 1 }} />}
         {title || 'Modal title'}
       </DialogTitle>
       <Divider />

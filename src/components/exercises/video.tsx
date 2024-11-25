@@ -32,7 +32,7 @@ export default function ExerciseVideo({
       sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
       onClick={() => {
         if (mode === 'view') {
-          videoViewModal.show({ url, description, id });
+          videoViewModal.show({ url, description, id, title });
         }
         if (mode === 'edit' && onEdit) {
           videoEditModal.show({
