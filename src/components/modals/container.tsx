@@ -3,7 +3,12 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { DialogTitle, DialogActions, DialogContent } from '@mui/material';
+import {
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Divider,
+} from '@mui/material';
 
 type ModalContainer = {
   open: boolean;
@@ -13,6 +18,7 @@ type ModalContainer = {
   submitButtonColor?: 'error' | 'primary';
   titleColor?: 'error' | 'primary';
   submitButtonTitle?: string;
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 };
 export default function ModalContainer({
   open,
@@ -21,11 +27,17 @@ export default function ModalContainer({
   titleColor = 'primary',
   submitButtonTitle = 'Save changes',
   children,
+  maxWidth = 'lg',
   onClose,
   onSubmit,
 }: PropsWithChildren<ModalContainer>) {
   return (
-    <Dialog closeAfterTransition open={open} maxWidth="lg" onClose={onClose}>
+    <Dialog
+      closeAfterTransition
+      open={open}
+      maxWidth={maxWidth}
+      onClose={onClose}
+    >
       <DialogTitle
         color={titleColor}
         sx={{ m: 0, p: 2 }}
@@ -33,6 +45,7 @@ export default function ModalContainer({
       >
         {title || 'Modal title'}
       </DialogTitle>
+      <Divider />
       <IconButton
         aria-label="close"
         onClick={onClose}

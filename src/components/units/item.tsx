@@ -6,12 +6,11 @@ import {
   Paper,
   Stack,
   Typography,
-  Link,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Unit } from '@/managers/unit/interface';
 import CastForEducationIcon from '@mui/icons-material/CastForEducation';
-import YouTubeIcon from '@mui/icons-material/YouTube';
+import ExerciseVideo from '@/components/exercises/video';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -37,18 +36,16 @@ export default function UnitItem({ unit }: UnitItemProps) {
           </AccordionSummary>
           <AccordionDetails>
             <Stack>
-              <Link
-                component="button"
-                underline="hover"
-                variant="body2"
-                sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-                onClick={() => {
-                  console.info("I'm a button.");
-                }}
-              >
-                <YouTubeIcon color="error" />
-                <Typography variant="body1">Lesson 1</Typography>
-              </Link>
+              {!!unit.videos &&
+                unit.videos.map((video) => (
+                  <ExerciseVideo
+                    id={video.id}
+                    key={video.id}
+                    url={video.url}
+                    title={video.title}
+                    description={video.description}
+                  />
+                ))}
             </Stack>
           </AccordionDetails>
         </Accordion>

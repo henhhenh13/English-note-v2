@@ -3,10 +3,11 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import React, { useId } from 'react';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Stack, SvgIcon } from '@mui/material';
+import { Stack, SvgIcon, Typography } from '@mui/material';
 import { SvgIconComponent } from '@mui/icons-material';
 
 export type CustomMenuProps = {
+  buttonTitle?: string;
   items: {
     title: string;
     icon: SvgIconComponent;
@@ -14,7 +15,7 @@ export type CustomMenuProps = {
     onClick: () => void;
   }[];
 };
-export default function CustomMenu({ items }: CustomMenuProps) {
+export default function CustomMenu({ buttonTitle, items }: CustomMenuProps) {
   const id = useId();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -34,6 +35,11 @@ export default function CustomMenu({ items }: CustomMenuProps) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
+        {buttonTitle && (
+          <Typography variant="body2" sx={{ mr: 1 }} fontWeight={600}>
+            {buttonTitle}
+          </Typography>
+        )}
         <SettingsIcon />
       </Button>
       <Menu

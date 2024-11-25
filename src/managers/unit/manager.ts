@@ -2,6 +2,7 @@ import { ApiStatus } from '@/contains/type';
 import useUnitApi from '@/managers/unit/api';
 import { Unit } from '@/managers/unit/interface';
 import { UNITS_SELECTOR, UNITS_STATE } from '@/managers/unit/state';
+import { Video } from '@/managers/video/interface';
 import { useCallback } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 
@@ -10,9 +11,10 @@ type UseUnitsManager = {
   addUnit: (params: {
     title: string;
     description: string;
-  }) => Promise<ApiStatus>;
+  }) => Promise<{ data: Unit; flags: ApiStatus }>;
   updateUnit: (params: Unit) => Promise<ApiStatus>;
   deleteUnit: (id: string) => Promise<ApiStatus>;
+  addVideosOnUnitByUnitId: (unitId: string, videos: Video[]) => void;
   units: Unit[];
   flags: ApiStatus;
 };
@@ -39,16 +41,19 @@ export default function useUnitsManager(): UseUnitsManager {
     }
   }, [fetchUnitsApi, setUnitsState]);
 
-  const addUnit: UseUnitsManager['addUnit'] = useCallback(async (params) => {
-    const { data, flags } = await addUnitApi(params);
-    if (!!data && flags.isSuccess) {
-      setUnitsState((prevState) => {
-        prevState.units.set(data.id, data);
-        return { ...prevState };
-      });
-    }
-    return flags;
-  }, [addUnitApi, setUnitsState]);
+  const addUnit: UseUnitsManager['addUnit'] = useCallback(
+    async (params) => {
+      const { data, flags } = await addUnitApi(params);
+      if (!!data && flags.isSuccess) {
+        setUnitsState((prevState) => {
+          prevState.units.set(data.id, data);
+          return { ...prevState };
+        });
+      }
+      return { data, flags };
+    },
+    [addUnitApi, setUnitsState],
+  );
 
   const updateUnit: UseUnitsManager['updateUnit'] = useCallback(
     async (params) => {
@@ -78,7 +83,26 @@ export default function useUnitsManager(): UseUnitsManager {
     [deleteUnitApi, setUnitsState],
   );
 
+  const addVideosOnUnitByUnitId: UseUnitsManager['addVideosOnUnitByUnitId'] =
+    useCallback(
+      async (unitId, videos) => {
+        setUnitsState((prevState) => {
+          const unit = prevState.units.get(unitId);
+
+          if (unit) {
+            prevState.units.set(unitId, {
+              ...unit,
+              videos: [...unit.videos, ...videos],
+            });
+          }
+          return { ...prevState };
+        });
+      },
+      [setUnitsState],
+    );
+
   return {
+    addVideosOnUnitByUnitId,
     fetchUnits,
     addUnit,
     updateUnit,
