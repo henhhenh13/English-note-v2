@@ -1,5 +1,6 @@
-import { UnitService } from '@/managers/unit/interface';
+import { Unit, UnitService } from '@/managers/unit/interface';
 import { supabase } from '@/supabase-client';
+import camelize from 'camelize-ts';
 
 type UnitApi = {
   fetchUnits: UnitService['fetchUnits'];
@@ -10,10 +11,13 @@ type UnitApi = {
 
 export default function useUnitApi(): UnitApi {
   const fetchUnits: UnitService['fetchUnits'] = async () => {
-    const { data, error } = await supabase.from('units').select('*');
+    const { data, error } = await supabase
+      .from('units')
+      .select<string, Unit>('*, videos(*)');
 
+    const dataCamelize = data ? data.map((item) => camelize(item)) : [];
     return {
-      data: data || [],
+      data: dataCamelize,
       flags: {
         isSuccess: !!data && !error,
         isError: !!error,
@@ -26,11 +30,11 @@ export default function useUnitApi(): UnitApi {
     const { data, error } = await supabase
       .from('units')
       .insert(params)
-      .select('*')
+      .select<string, Unit>('*, videos(*)')
       .single();
 
     return {
-      data,
+      data: camelize(data),
       flags: {
         isSuccess: !!data && !error,
         isError: !!error,

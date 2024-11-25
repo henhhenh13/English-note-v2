@@ -1,9 +1,11 @@
 import { ApiStatus } from '@/contains/type';
+import { Video } from '@/managers/video/interface';
 
 export type Unit = {
   id: string;
   title: string;
   description: string;
+  videos: Video[];
 };
 
 export type UnitState = {
@@ -19,9 +21,13 @@ export type UnitSelector = {
 export type UnitService = {
   fetchUnits: () => Promise<{ data: Unit[]; flags: ApiStatus }>;
   addUnit: (params: { title: string; description: string }) => Promise<{
-    data: Unit;
+    data: Unit | null;
     flags: ApiStatus;
   }>;
-  updateUnit: (params: Unit) => Promise<{ data: Unit; flags: ApiStatus }>;
+  updateUnit: (params: {
+    id: string;
+    title: string;
+    description: string;
+  }) => Promise<{ data: Unit; flags: ApiStatus }>;
   deleteUnit: (id: string) => Promise<ApiStatus>;
 };

@@ -1,0 +1,1 @@
+export const VIDEO_NOTES = 'VIDEO_NOTES'
