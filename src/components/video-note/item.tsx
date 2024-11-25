@@ -1,12 +1,26 @@
 import {
+  Button,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Typography,
+  Divider,
+  Box,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { SerializedVideoNote } from '@/managers/video-note/interface';
 
-export default function VideoNoteItem() {
+type VideoNoteItemProps = SerializedVideoNote & {
+  onDelete: () => void;
+  onPlayWithTime: () => void;
+};
+export default function VideoNoteItem({
+  title,
+  description,
+  displayTime,
+  onDelete,
+  onPlayWithTime,
+}: VideoNoteItemProps) {
   return (
     <Accordion
       disableGutters
@@ -23,11 +37,11 @@ export default function VideoNoteItem() {
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
       >
-        Accordion 1
+        {title} ({displayTime})
       </AccordionSummary>
+      <Divider />
       <AccordionDetails>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-        malesuada lacus ex, sit amet blandit leo lobortis eget.
+        {description}
         <Typography
           sx={{
             display: 'inline',
@@ -39,9 +53,20 @@ export default function VideoNoteItem() {
             },
           }}
           variant="subtitle2"
+          onClick={onPlayWithTime}
         >
           Play
         </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Button
+            variant="contained"
+            color="error"
+            size="small"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        </Box>
       </AccordionDetails>
     </Accordion>
   );

@@ -11,7 +11,7 @@ interface UseVideoNoteManager {
   getVideoNotesByVideoId: (videoId: string) => SerializedVideoNote[];
   deleteVideoNoteById: (id: string) => void;
 }
-export const useVideoNoteManager = (): UseVideoNoteManager => {
+export default function useVideoNoteManager(): UseVideoNoteManager {
   const setVideoNote = useSetRecoilState(VIDEO_NOTE_STATE);
   const { videoNotes } = useRecoilValue(VIDEO_NOTE_SELECTOR);
 

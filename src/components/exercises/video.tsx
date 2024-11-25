@@ -11,12 +11,14 @@ type ExerciseVideoProps = {
   title: string;
   description: string;
   url: string;
+  id?: string;
   onEdit?: (video: { title: string; description: string; url: string }) => void;
 };
 export default function ExerciseVideo({
   url,
   title,
   description,
+  id,
   mode = 'view',
   onEdit,
 }: ExerciseVideoProps) {
@@ -30,7 +32,7 @@ export default function ExerciseVideo({
       sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
       onClick={() => {
         if (mode === 'view') {
-          videoViewModal.show({ url, description });
+          videoViewModal.show({ url, description, id });
         }
         if (mode === 'edit' && onEdit) {
           videoEditModal.show({
