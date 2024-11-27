@@ -16,7 +16,9 @@ const VideoAddModal = NiceModal.create(
     const { visible, remove } = useModal();
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [url, setUrl] = useState('');
+    const [url, setUrl] = useState(
+      'Example: https://www.youtube.com/watch?v=0000',
+    );
     return (
       <ModalContainer
         title="Video Add"
@@ -29,11 +31,11 @@ const VideoAddModal = NiceModal.create(
         }}
       >
         <Stack spacing={4} direction="row" sx={{ width: 1080, height: 565 }}>
-          <Box sx={{ width: '55%' }}>
+          <Box sx={{ width: '55%', display: 'flex', alignItems: 'center' }}>
             <CustomReactPlayer url={url} controls width="100%" height={405} />
           </Box>
-          <Box sx={{ width: '45%' }}>
-            <Stack spacing={2}>
+          <Box sx={{ width: '45%', display: 'flex', alignItems: 'center' }}>
+            <Stack spacing={2} flex={1}>
               <TextField
                 label="Url"
                 value={url}

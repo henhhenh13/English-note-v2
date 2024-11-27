@@ -8,6 +8,7 @@ import { Box, Paper, Stack, Typography } from '@mui/material';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 import YouTubeIcon from '@mui/icons-material/YouTube';
+
 type VideoViewModalProps = {
   url: string;
   title: string;
@@ -106,8 +107,12 @@ const VideoViewModal = NiceModal.create(
               />
               <Stack direction="row" justifyContent="flex-end">
                 <VideoNoteForm
+                  status={isPlaying ? 'play' : 'pause'}
                   videoTime={videoTime}
                   onSubmit={handleAddVideoNote}
+                  onPlayButtonClick={() => {
+                    setIsPlaying((prevState) => !prevState);
+                  }}
                 />
               </Stack>
             </Stack>
