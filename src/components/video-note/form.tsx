@@ -27,7 +27,7 @@ export default function VideoNoteForm({
     <Paper elevation={4} sx={{ p: 2, minWidth: 300 }}>
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between">
-          <Typography variant="h6">Create note time</Typography>
+          <Typography variant="h6">Create note</Typography>
           <Button variant="text" color="primary" onClick={onPlayButtonClick}>
             {status === 'pause' ? (
               <PlayCircleIcon sx={{ mr: 0.5 }} />

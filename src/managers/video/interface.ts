@@ -15,4 +15,5 @@ export type VideoService = {
     url: string;
     unitId: string;
   }[]) => Promise<{ data: Video[]; flags: ApiStatus }>;
+  deleteVideos: (ids: string[]) => Promise<ApiStatus>;
 };
