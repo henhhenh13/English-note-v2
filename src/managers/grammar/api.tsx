@@ -2,6 +2,7 @@ import { Grammar } from '@/managers/grammar/interface';
 
 import { GrammarApiService } from '@/managers/grammar/interface';
 import { supabase } from '@/supabase-client';
+import camelize from 'camelize-ts';
 
 type UseGrammarApiService = {
   addGrammar: GrammarApiService['addGrammar'];
@@ -11,6 +12,12 @@ type UseGrammarApiService = {
 };
 
 export default function useGrammarApiService(): UseGrammarApiService {
+  const initialGrammar: Grammar = {
+    id: '',
+    title: '',
+    description: '',
+    content: '',
+  };
   const fetchGrammars: GrammarApiService['fetchGrammars'] = async () => {
     const { data, error } = await supabase.from('grammars').select('*');
     return {
@@ -31,11 +38,11 @@ export default function useGrammarApiService(): UseGrammarApiService {
     const { data, error } = await supabase
       .from('grammars')
       .insert(params)
-      .select('*')
+      .select<string, Grammar>('*')
       .single();
 
     return {
-      data,
+      data: camelize(data) || initialGrammar,
       flags: {
         isLoading: false,
         isError: !!error,
@@ -51,11 +58,11 @@ export default function useGrammarApiService(): UseGrammarApiService {
       .from('grammars')
       .update(params)
       .eq('id', params.id)
-      .select('*')
+      .select<string, Grammar>('*')
       .single();
 
     return {
-      data,
+      data: camelize(data) || initialGrammar,
       flags: {
         isLoading: false,
         isError: !!error,

@@ -21,7 +21,7 @@ export type UnitSelector = {
 export type UnitService = {
   fetchUnits: () => Promise<{ data: Unit[]; flags: ApiStatus }>;
   addUnit: (params: { title: string; description: string }) => Promise<{
-    data: Unit | null;
+    data: Unit;
     flags: ApiStatus;
   }>;
   updateUnit: (params: {

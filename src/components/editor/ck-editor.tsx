@@ -234,12 +234,12 @@ export default function Editor({ initialData, onChange }: EditorProps) {
           <div className="editor-container__editor">
             <div ref={editorRef}>
               {isLayoutReady && (
-                // @ts-expect-error CKEditor types are not fully compatible with React 18+
                 <CKEditor
                   editor={ClassicEditor}
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-expect-error
                   config={editorConfig}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  onChange={(__: any, editor: any) => {
+                  onChange={(__, editor) => {
                     const data = editor.getData();
                     onChange(data);
                   }}

@@ -9,7 +9,15 @@ type UnitApi = {
   deleteUnit: UnitService['deleteUnit'];
 };
 
+
 export default function useUnitApi(): UnitApi {
+  const initialUnit: Unit = {
+    id: '',
+    title: '',
+    description: '',
+    videos: [],
+  };
+  
   const fetchUnits: UnitService['fetchUnits'] = async () => {
     const { data, error } = await supabase
       .from('units')
@@ -17,7 +25,7 @@ export default function useUnitApi(): UnitApi {
 
     const dataCamelize = data ? data.map((item) => camelize(item)) : [];
     return {
-      data: dataCamelize,
+      data: dataCamelize || [],
       flags: {
         isSuccess: !!data && !error,
         isError: !!error,
@@ -34,7 +42,7 @@ export default function useUnitApi(): UnitApi {
       .single();
 
     return {
-      data: camelize(data),
+      data: camelize(data) || initialUnit,
       flags: {
         isSuccess: !!data && !error,
         isError: !!error,
@@ -48,11 +56,11 @@ export default function useUnitApi(): UnitApi {
       .from('units')
       .update(params)
       .eq('id', params.id)
-      .select('*')
+      .select<string, Unit>('*')
       .single();
 
     return {
-      data,
+      data: camelize(data) || initialUnit,
       flags: {
         isSuccess: !!data && !error,
         isError: !!error,

@@ -14,5 +14,5 @@ export type VideoService = {
     description: string;
     url: string;
     unitId: string;
-  }[]) => Promise<{ data: Video[] | null; flags: ApiStatus }>;
+  }[]) => Promise<{ data: Video[]; flags: ApiStatus }>;
 };

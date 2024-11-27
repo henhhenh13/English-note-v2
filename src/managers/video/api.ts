@@ -21,7 +21,7 @@ export default function useVideoApi(): UseVideoApi {
       .insert(paramsSnakify)
       .select<string, Video>('*');
 
-    const dataCamelize = data ? data.map((item) => camelize(item)) : null;
+    const dataCamelize = data ? data.map((item) => camelize(item)) : [];
     return {
       data: dataCamelize,
       flags: {

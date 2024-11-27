@@ -9,7 +9,15 @@ type UseThemeApi = {
   deleteTheme: ThemeApiService['deleteTheme'];
 };
 
+
+
 export default function useThemeApi(): UseThemeApi {
+  const initialTheme: Theme = {
+    id: '',
+    title: '',
+    description: '',
+    vocabularies: [],
+  };
   const fetchThemes: ThemeApiService['fetchThemes'] = async () => {
     const { data, error } = await supabase
       .from('themes')
@@ -36,7 +44,7 @@ export default function useThemeApi(): UseThemeApi {
       .single();
 
     return {
-      data: camelize(data),
+      data: camelize(data) || initialTheme,
       flags: {
         isLoading: false,
         isSuccess: !!data,
@@ -58,7 +66,7 @@ export default function useThemeApi(): UseThemeApi {
       .single();
 
     return {
-      data: camelize(data),
+      data: camelize(data) || initialTheme,
       flags: {
         isLoading: false,
         isSuccess: !!data,
