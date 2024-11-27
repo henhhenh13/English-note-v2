@@ -65,6 +65,10 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     }
   }, [addUnit, addVideos, addVideosOnUnitByUnitId, description, title, videos]);
 
+  const handleVideoDelete = useCallback((index: number) => {
+    setVideos((prevState) => prevState.filter((__, i) => i !== index));
+  }, []);
+
   return (
     <ModalContainer
       title="Unit Add"
@@ -98,7 +102,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         </Stack>
         <Divider />
 
-        <Stack>
+        <Stack spacing={2} divider={<Divider />}>
           {!!videos &&
             videos.map((video, index) => (
               <ExerciseVideo
@@ -106,6 +110,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
                 {...video}
                 mode="edit"
                 onEdit={(params) => handleVideoEdit(params, index)}
+                onDelete={() => handleVideoDelete(index)}
               />
             ))}
         </Stack>
