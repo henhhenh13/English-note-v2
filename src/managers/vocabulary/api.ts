@@ -12,7 +12,15 @@ type UseVocabularyApi = {
   deleteVocabulary: VocabularyApiService['deleteVocabulary'];
   addVocabulary: VocabularyApiService['addVocabulary'];
 };
+
 export default function useVocabularyApi(): UseVocabularyApi {
+  const initialVocabulary: Vocabulary = {
+    id: '',
+    vocabulary: '',
+    themeId: '',
+    description: '',
+    translation: '',
+  };
   const fetchVocabularies = async () => {
     const { data } = await supabase.from('vocabularies').select('*');
 
@@ -30,7 +38,7 @@ export default function useVocabularyApi(): UseVocabularyApi {
       .single();
 
     return {
-      data: camelize(data),
+      data: camelize(data) || initialVocabulary,
       flags: {
         isSuccess: !!data,
         isLoading: false,
@@ -58,10 +66,10 @@ export default function useVocabularyApi(): UseVocabularyApi {
       .from('vocabularies')
       .insert({ ...snakify(params) })
       .select<string, Vocabulary>('*')
-      .single();
+      .single();  
 
     return {
-      data: camelize(data),
+      data: camelize(data) || initialVocabulary,
       flags: {
         isSuccess: !!data,
         isLoading: false,

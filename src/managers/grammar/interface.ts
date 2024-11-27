@@ -27,7 +27,7 @@ export type GrammarApiService = {
     description: string;
     content: string;
   }) => Promise<{
-    data: Grammar | null;
+    data: Grammar;
     flags: ApiStatus;
   }>;
   updateGrammar: (params: Grammar) => Promise<{

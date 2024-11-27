@@ -27,10 +27,10 @@ export type ThemeApiService = {
     id: string,
     title: string,
     description: string,
-  ) => Promise<{ data: Theme | null; flags: ApiStatus }>;
+  ) => Promise<{ data: Theme; flags: ApiStatus }>;
   addTheme: (
     title: string,
     description: string,
-  ) => Promise<{ data: Theme | null; flags: ApiStatus }>;
+  ) => Promise<{ data: Theme; flags: ApiStatus }>;
   deleteTheme: (id: string) => Promise<ApiStatus>;
 };

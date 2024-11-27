@@ -15,11 +15,11 @@ export type VocabularyApiService = {
     translation: string;
     description: string | null;
   }) => Promise<{
-    data: Vocabulary | null;
+    data: Vocabulary;
     flags: ApiStatus;
   }>;
   updateVocabulary: (params: Vocabulary) => Promise<{
-    data: Vocabulary | null;
+    data: Vocabulary ;
     flags: ApiStatus;
   }>;
   deleteVocabulary: (id: string) => Promise<ApiStatus>;
