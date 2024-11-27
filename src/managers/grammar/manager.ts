@@ -2,7 +2,7 @@ import { ApiStatus } from '@/contains/type';
 import useGrammarApiService from '@/managers/grammar/api';
 
 import {
-    GrammarSelector
+  GrammarSelector
 } from '@/managers/grammar/interface';
 import { GRAMMAR_SELECTOR, GRAMMAR_STATE } from '@/managers/grammar/state';
 import { useCallback } from 'react';
