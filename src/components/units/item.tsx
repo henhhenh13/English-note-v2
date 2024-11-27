@@ -54,7 +54,7 @@ export default function UnitItem({ unit }: UnitItemProps) {
   );
 
   return (
-    <Paper elevation={5} sx={{ py: 1, px: 2, pb: 0 }}>
+    <Paper elevation={5} sx={{ py: 1, px: 2 }}>
       <Stack direction="row" spacing={3} alignItems="center" mb={2}>
         <Paper sx={{ p: 1 }} elevation={3}>
           <CastForEducationIcon fontSize="medium" color="primary" />
@@ -77,7 +77,14 @@ export default function UnitItem({ unit }: UnitItemProps) {
       <Divider />
       <div>
         <Accordion disableGutters sx={{ boxShadow: 'none', border: 'none' }}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary
+            sx={{
+              minHeight: 40,
+              maxHeight: 40,
+              '&.Mui-expanded': { minHeight: 40 },
+            }}
+            expandIcon={<ExpandMoreIcon />}
+          >
             <Typography variant="h6">Lesson 1</Typography>
           </AccordionSummary>
           <AccordionDetails>
