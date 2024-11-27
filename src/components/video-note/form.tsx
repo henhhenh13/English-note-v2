@@ -1,14 +1,19 @@
 import convertToHMS from '@/utils/convert-stringt-hms';
 import { Paper, Stack, Typography, Button, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
-
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 type VideoNoteFormProps = {
   videoTime: number;
   onSubmit: (title: string, description: string) => void;
+  status: 'play' | 'pause';
+  onPlayButtonClick: () => void;
 };
 export default function VideoNoteForm({
   videoTime,
+  status,
   onSubmit,
+  onPlayButtonClick,
 }: VideoNoteFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -23,8 +28,13 @@ export default function VideoNoteForm({
       <Stack spacing={2}>
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h6">Create note time</Typography>
-          <Button variant="text" color="primary">
-            time: {convertToHMS(videoTime)}
+          <Button variant="text" color="primary" onClick={onPlayButtonClick}>
+            {status === 'pause' ? (
+              <PlayCircleIcon sx={{ mr: 0.5 }} />
+            ) : (
+              <PauseCircleIcon sx={{ mr: 0.5 }} />
+            )}
+            {convertToHMS(videoTime)}
           </Button>
         </Stack>
         <Stack spacing={2}>
