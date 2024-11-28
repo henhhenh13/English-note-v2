@@ -1,5 +1,6 @@
 import ModalContainer from '@/components/modals/container';
 import QuizList from '@/components/quiz/list';
+import useToastManager from '@/hooks/use-toast';
 import { Quiz } from '@/managers/quiz/interface';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { Paper, Stack, TextField, Typography } from '@mui/material';
@@ -12,11 +13,13 @@ type QuizViewModalProps = {
 const QuizViewModal = NiceModal.create(
   ({ quiz }: QuizViewModalProps): React.ReactElement => {
     const { visible, remove } = useModal();
+    const { successToast, errorToast } = useToastManager();
     const [userAnswerIds, setUserAnswerIds] = useState<string[]>([]);
     const [userAnswer, setUserAnswer] = useState<string>('');
     const [newQuestionList, setNewQuestionList] = useState<
       Quiz['questionList']
     >(quiz.questionList);
+    const [isError, setIsError] = useState<boolean>(false);
 
     const clearUserAnswer = useCallback(() => {
       setUserAnswer('');
@@ -35,12 +38,18 @@ const QuizViewModal = NiceModal.create(
           prev.filter((question) => question.id !== currentQuestion?.id),
         );
         setUserAnswerIds([...userAnswerIds, currentQuestion?.id]);
+        successToast('Correct Answer');
         clearUserAnswer();
+      } else {
+        errorToast('Wrong Answer');
+        setIsError(true);
       }
     }, [
       clearUserAnswer,
       currentQuestion?.answer,
       currentQuestion?.id,
+      errorToast,
+      successToast,
       userAnswer,
       userAnswerIds,
     ]);
@@ -80,8 +89,12 @@ const QuizViewModal = NiceModal.create(
               <TextField
                 label="Your Answer"
                 size="small"
+                error={isError}
                 value={userAnswer}
-                onChange={(e) => setUserAnswer(e.target.value)}
+                onChange={(e) => {
+                  setIsError(false);
+                  setUserAnswer(e.target.value);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === 'NumpadEnter') {
                     handleSubmitAnswer();
