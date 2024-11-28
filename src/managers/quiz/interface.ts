@@ -1,16 +1,18 @@
 import { ApiStatus } from '@/contains/type';
 
+export type QuizQuestionItem = {
+  id: string;
+  question: string;
+  options: string[];
+  answer: string;
+};
+
 export type Quiz = {
   id: string;
   title: string;
   description: string;
   isMultipleChoice: boolean;
-  questionList: {
-    id: string;
-    question: string;
-    options: string[];
-    answer: string;
-  }[];
+  questionList: QuizQuestionItem[];
 };
 
 export type QuizState = {

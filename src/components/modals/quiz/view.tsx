@@ -1,0 +1,99 @@
+import ModalContainer from '@/components/modals/container';
+import QuizList from '@/components/quiz/list';
+import { Quiz } from '@/managers/quiz/interface';
+import NiceModal, { useModal } from '@ebay/nice-modal-react';
+import { Paper, Stack, TextField, Typography } from '@mui/material';
+import { useCallback, useMemo, useState } from 'react';
+
+type QuizViewModalProps = {
+  quiz: Quiz;
+};
+
+const QuizViewModal = NiceModal.create(
+  ({ quiz }: QuizViewModalProps): React.ReactElement => {
+    const { visible, remove } = useModal();
+    const [userAnswerIds, setUserAnswerIds] = useState<string[]>([]);
+    const [userAnswer, setUserAnswer] = useState<string>('');
+    const [newQuestionList, setNewQuestionList] = useState<
+      Quiz['questionList']
+    >(quiz.questionList);
+
+    const clearUserAnswer = useCallback(() => {
+      setUserAnswer('');
+    }, []);
+
+    const currentQuestion = useMemo(() => {
+      return newQuestionList[0];
+    }, [newQuestionList]);
+
+    const handleSubmitAnswer = useCallback(() => {
+      const isCorrect =
+        userAnswer.trim().toLowerCase() ===
+        currentQuestion?.answer.toLocaleLowerCase();
+      if (isCorrect) {
+        setNewQuestionList((prev) =>
+          prev.filter((question) => question.id !== currentQuestion?.id),
+        );
+        setUserAnswerIds([...userAnswerIds, currentQuestion?.id]);
+        clearUserAnswer();
+      }
+    }, [
+      clearUserAnswer,
+      currentQuestion?.answer,
+      currentQuestion?.id,
+      userAnswer,
+      userAnswerIds,
+    ]);
+
+    return (
+      <ModalContainer
+        title="Quiz View"
+        open={visible}
+        submitButtonColor="primary"
+        titleColor="primary"
+        onClose={remove}
+      >
+        <Stack spacing={2} width={640}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={1}
+          >
+            <Typography variant="h6">{quiz.title}</Typography>
+            <Stack direction="row" alignItems="center" gap={1}>
+              <span>{userAnswerIds.length}</span>/
+              <span>{quiz.questionList.length}</span>
+            </Stack>
+          </Stack>
+
+          <QuizList
+            totalUserAnswer={userAnswerIds.length}
+            questions={newQuestionList}
+          />
+
+          <Paper sx={{ p: 2 }} elevation={4}>
+            <Stack spacing={1}>
+              <Typography variant="body1" fontWeight={500}>
+                Question: {currentQuestion?.question}
+              </Typography>
+              <TextField
+                label="Your Answer"
+                size="small"
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+                    handleSubmitAnswer();
+                  }
+                }}
+              />
+            </Stack>
+          </Paper>
+        </Stack>
+      </ModalContainer>
+    );
+  },
+);
+
+export default QuizViewModal;

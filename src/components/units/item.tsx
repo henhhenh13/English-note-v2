@@ -20,6 +20,7 @@ import { useMemo } from 'react';
 import useUnitsManager from '@/managers/unit/manager';
 import { useModal } from '@ebay/nice-modal-react';
 import UnitDeleteModal from '@/components/modals/unit/delete';
+import ExerciseQuiz from '@/components/exercises/quiz';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -98,6 +99,11 @@ export default function UnitItem({ unit }: UnitItemProps) {
                     title={video.title}
                     description={video.description}
                   />
+                ))}
+
+              {!!unit.quizzes &&
+                unit.quizzes.map((quiz) => (
+                  <ExerciseQuiz quiz={quiz} key={quiz.id} />
                 ))}
             </Stack>
           </AccordionDetails>

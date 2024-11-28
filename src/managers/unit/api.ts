@@ -16,12 +16,13 @@ export default function useUnitApi(): UnitApi {
     title: '',
     description: '',
     videos: [],
+    quizzes: [],
   };
   
   const fetchUnits: UnitService['fetchUnits'] = async () => {
     const { data, error } = await supabase
       .from('units')
-      .select<string, Unit>('*, videos(*)');
+      .select<string, Unit>('*, videos(*), quizzes(*)');
 
     const dataCamelize = data ? data.map((item) => camelize(item)) : [];
     return {
