@@ -8,6 +8,9 @@ import VideoAddModal from '@/components/modals/video/add';
 import ExerciseVideo from '@/components/exercises/video';
 import useUnitsManager from '@/managers/unit/manager';
 import useVideoManager from '@/managers/video/manager';
+import QuizIcon from '@mui/icons-material/Quiz';
+import QuizAddModal from '@/components/modals/quiz/add';
+
 const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const { visible, remove } = useModal();
   const { addUnit, addVideosOnUnitByUnitId } = useUnitsManager();
@@ -15,6 +18,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const videoAddModal = useModal(VideoAddModal);
+  const quizAddModal = useModal(QuizAddModal);
   const [videos, setVideos] = useState<
     { description: string; url: string; title: string }[]
   >([]);
@@ -46,8 +50,28 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         iconColor: 'error',
         onClick: () => videoAddModal.show({ onSubmit: handleVideoAdd }),
       },
+      {
+        title: 'Quiz',
+        icon: QuizIcon,
+        iconColor: 'primary',
+        onClick: () =>
+          quizAddModal.show({
+            mode: 'quiz',
+            onSubmit: async () => {},
+          }),
+      },
+      {
+        title: 'Quiz: Multiple Choice',
+        icon: QuizIcon,
+        iconColor: 'primary',
+        onClick: () =>
+          quizAddModal.show({
+            mode: 'options',
+            onSubmit: async () => {},
+          }),
+      },
     ];
-  }, [videoAddModal, handleVideoAdd]);
+  }, [videoAddModal, handleVideoAdd, quizAddModal]);
 
   const handleAddUnit = useCallback(async () => {
     const { data, flags } = await addUnit({ title, description });
