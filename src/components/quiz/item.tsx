@@ -4,12 +4,13 @@ import { Paper, Stack, Box, Typography } from '@mui/material';
 type QuizItemProps = QuizQuestionItem & {
   index: number;
   isActive: boolean;
+  userAnswer: string;
 };
 export default function QuizItem({
   question,
-  answer,
   index,
   isActive,
+  userAnswer,
 }: QuizItemProps) {
   return (
     <Paper
@@ -52,7 +53,7 @@ export default function QuizItem({
         <Box>-</Box>
 
         <Stack direction="row" alignItems="center" gap={1}>
-          {answer}
+          {userAnswer ? userAnswer : '----'}
         </Stack>
       </Stack>
     </Paper>

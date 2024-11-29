@@ -5,9 +5,11 @@ import { TransitionGroup } from 'react-transition-group';
 type QuizListProps = {
   questions: Quiz['questionList'];
   totalUserAnswer: number;
+  userAnswer: string;
 };
 export default function QuizList({
   questions,
+  userAnswer,
   totalUserAnswer,
 }: QuizListProps) {
   return (
@@ -26,6 +28,7 @@ export default function QuizList({
               <Collapse sx={{ mb: 1 }} key={question.id}>
                 <QuizItem
                   {...question}
+                  userAnswer={index === 0 ? userAnswer : ''}
                   index={index + 1 + totalUserAnswer}
                   isActive={index === 0}
                 />

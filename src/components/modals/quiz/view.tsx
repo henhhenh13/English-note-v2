@@ -77,6 +77,7 @@ const QuizViewModal = NiceModal.create(
           </Stack>
 
           <QuizList
+            userAnswer={userAnswer}
             totalUserAnswer={userAnswerIds.length}
             questions={newQuestionList}
           />
@@ -91,6 +92,7 @@ const QuizViewModal = NiceModal.create(
                 size="small"
                 error={isError}
                 value={userAnswer}
+                autoFocus
                 onChange={(e) => {
                   setIsError(false);
                   setUserAnswer(e.target.value);
