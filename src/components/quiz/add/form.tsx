@@ -1,13 +1,19 @@
 import { TextField, Stack, Button, Paper, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 type QuizFormProps = {
-  onAdd: (answer: string) => void;
+  onAdd: (answer: string, question: string) => void;
 };
 
 export default function QuizForm({ onAdd }: QuizFormProps) {
   const [answer, setAnswer] = useState<string>('');
   const [question, setQuestion] = useState<string>('');
+
+  const clear = useCallback(() => {
+    setAnswer('');
+    setQuestion('');
+  }, []);
+
   return (
     <Paper sx={{ p: 2, width: '40%', height: 'fit-content' }} elevation={4}>
       <Stack spacing={1}>
@@ -35,8 +41,8 @@ export default function QuizForm({ onAdd }: QuizFormProps) {
             variant="contained"
             color="primary"
             onClick={() => {
-              onAdd(answer);
-              setAnswer('');
+              onAdd(answer, question);
+              clear();
             }}
           >
             Add

@@ -9,7 +9,7 @@ import {
 import { useCallback, useState } from 'react';
 
 type OptionsFormProps = {
-  onAdd: (options: string[], correctOption: string) => void;
+  onAdd: (options: string[], correctOption: string, question: string) => void;
 };
 
 export default function OptionsForm({ onAdd }: OptionsFormProps) {
@@ -34,6 +34,7 @@ export default function OptionsForm({ onAdd }: OptionsFormProps) {
     setOptions([]);
     setOption('');
     setCorrectOption('');
+    setQuestion('');
   }, []);
 
   return (
@@ -64,6 +65,11 @@ export default function OptionsForm({ onAdd }: OptionsFormProps) {
             size="small"
             value={option}
             onChange={(e) => setOption(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+                handleAddOption();
+              }
+            }}
           />
           <Button variant="contained" color="primary" onClick={handleAddOption}>
             Add option
@@ -87,7 +93,7 @@ export default function OptionsForm({ onAdd }: OptionsFormProps) {
             variant="contained"
             color="primary"
             onClick={() => {
-              onAdd(options, correctOption);
+              onAdd(options, correctOption, question);
               clear();
             }}
           >

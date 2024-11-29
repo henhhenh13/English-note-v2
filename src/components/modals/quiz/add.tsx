@@ -1,10 +1,12 @@
 import ModalContainer from '@/components/modals/container';
 import QuizForm from '@/components/quiz/add/form';
-import QuizAddItem from '@/components/quiz/add/item';
+import QuizAddList from '@/components/quiz/add/list';
 import OptionsForm from '@/components/quiz/add/options-form';
+import { QuizQuestionItem } from '@/managers/quiz/interface';
+import generateUUID from '@/utils/generator-uuid';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import { Paper, Stack, TextField } from '@mui/material';
-import { useState } from 'react';
+import { Stack, TextField } from '@mui/material';
+import { useCallback, useState } from 'react';
 
 type QuizAddModalProps = {
   mode: 'options' | 'quiz';
@@ -15,6 +17,36 @@ const QuizAddModal = NiceModal.create(
   ({ mode, onSubmit }: QuizAddModalProps): React.ReactElement => {
     const { visible, remove } = useModal();
     const [title, setTitle] = useState<string>('');
+    const isMultipleChoice = mode === 'options';
+    const [quizList, setQuizList] = useState<QuizQuestionItem[]>([]);
+
+    const handleOptionsAdd = useCallback(
+      (options: string[], correctOption: string, question: string) => {
+        const quiz: QuizQuestionItem = {
+          id: generateUUID(),
+          question,
+          options,
+          answer: correctOption,
+        };
+        setQuizList((prev) => [...prev, quiz]);
+      },
+      [],
+    );
+
+    const handleQuizAdd = useCallback((answer: string, question: string) => {
+      const quiz: QuizQuestionItem = {
+        id: generateUUID(),
+        question,
+        options: [],
+        answer,
+      };
+      setQuizList((prev) => [...prev, quiz]);
+    }, []);
+
+    const handleDeleteQuiz = useCallback((id: string) => {
+      setQuizList((prev) => prev.filter((quiz) => quiz.id !== id));
+    }, []);
+
     return (
       <ModalContainer
         title="Quiz Add"
@@ -35,21 +67,16 @@ const QuizAddModal = NiceModal.create(
             onChange={(e) => setTitle(e.target.value)}
           />
           <Stack direction="row" spacing={4}>
-            {mode === 'options' ? (
-              <OptionsForm onAdd={() => {}} />
+            {isMultipleChoice ? (
+              <OptionsForm onAdd={handleOptionsAdd} />
             ) : (
-              <QuizForm onAdd={() => {}} />
+              <QuizForm onAdd={handleQuizAdd} />
             )}
-            <Paper sx={{ p: 2, pr: 0, width: '60%' }} elevation={4}>
-              <Stack spacing={1} sx={{ maxHeight: 490, overflowY: 'auto' }}>
-                <QuizAddItem />
-                <QuizAddItem />
-                <QuizAddItem />
-                <QuizAddItem />
-                <QuizAddItem />
-                <QuizAddItem />
-              </Stack>
-            </Paper>
+            <QuizAddList
+              isMultipleChoice={isMultipleChoice}
+              quizList={quizList}
+              onDelete={handleDeleteQuiz}
+            />
           </Stack>
         </Stack>
       </ModalContainer>
