@@ -30,10 +30,11 @@ export default function ExerciseVideo({
     <Stack
       direction="row"
       alignItems="center"
+      justifyContent="space-between"
       sx={{
         cursor: 'pointer',
         gap: 1,
-        width: 'fit-content',
+        width: '100%',
         '&:hover': {
           color: 'primary.main',
           textDecoration: 'underline',
@@ -67,7 +68,6 @@ export default function ExerciseVideo({
           variant="contained"
           size="small"
           color="error"
-          sx={{ ml: 'auto' }}
         >
           Delete
         </Button>

@@ -2,23 +2,34 @@ import ModalContainer from '@/components/modals/container';
 import QuizForm from '@/components/quiz/add/form';
 import QuizAddList from '@/components/quiz/add/list';
 import OptionsForm from '@/components/quiz/add/options-form';
-import { QuizQuestionItem } from '@/managers/quiz/interface';
+import { Quiz, QuizQuestionItem } from '@/managers/quiz/interface';
 import generateUUID from '@/utils/generator-uuid';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { Stack, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
 
-type QuizAddModalProps = {
-  mode: 'options' | 'quiz';
-  onSubmit: () => Promise<void>;
+type QuizAddEditModalProps = {
+  mode: 'edit' | 'add';
+  isMultipleChoice: boolean;
+  quiz?: Omit<Quiz, 'id' | 'unitId'>;
+  onSubmit: (quiz: Omit<Quiz, 'id' | 'unitId'>) => void;
 };
 
-const QuizAddModal = NiceModal.create(
-  ({ mode, onSubmit }: QuizAddModalProps): React.ReactElement => {
+const QuizAddEditModal = NiceModal.create(
+  ({
+    mode,
+    isMultipleChoice,
+    quiz,
+    onSubmit,
+  }: QuizAddEditModalProps): React.ReactElement => {
     const { visible, remove } = useModal();
-    const [title, setTitle] = useState<string>('');
-    const isMultipleChoice = mode === 'options';
-    const [quizList, setQuizList] = useState<QuizQuestionItem[]>([]);
+    const [newTitle, setNewTitle] = useState<string>(quiz?.title || '');
+    const [newDescription, setNewDescription] = useState<string>(
+      quiz?.description || '',
+    );
+    const [quizList, setQuizList] = useState<QuizQuestionItem[]>(
+      quiz?.questionList || [],
+    );
 
     const handleOptionsAdd = useCallback(
       (options: string[], correctOption: string, question: string) => {
@@ -47,15 +58,25 @@ const QuizAddModal = NiceModal.create(
       setQuizList((prev) => prev.filter((quiz) => quiz.id !== id));
     }, []);
 
+    const handleSubmit = useCallback(() => {
+      onSubmit({
+        title: newTitle,
+        description: newDescription,
+        isMultipleChoice,
+        questionList: quizList,
+      });
+    }, [onSubmit, newTitle, newDescription, isMultipleChoice, quizList]);
+
     return (
       <ModalContainer
-        title="Quiz Add"
+        title={mode === 'edit' ? 'Quiz Edit' : 'Quiz Add'}
         open={visible}
         submitButtonColor="primary"
         titleColor="primary"
+        submitButtonTitle={mode === 'edit' ? 'Save changes' : 'Add'}
         onClose={remove}
         onSubmit={async () => {
-          await onSubmit();
+          handleSubmit();
           remove();
         }}
       >
@@ -63,9 +84,19 @@ const QuizAddModal = NiceModal.create(
           <TextField
             label="Title"
             size="small"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
           />
+
+          <TextField
+            label="Description"
+            size="small"
+            multiline
+            rows={2}
+            value={newDescription}
+            onChange={(e) => setNewDescription(e.target.value)}
+          />
+
           <Stack direction="row" spacing={4}>
             {isMultipleChoice ? (
               <OptionsForm onAdd={handleOptionsAdd} />
@@ -84,4 +115,4 @@ const QuizAddModal = NiceModal.create(
   },
 );
 
-export default QuizAddModal;
+export default QuizAddEditModal;

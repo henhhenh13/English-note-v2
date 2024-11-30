@@ -23,7 +23,7 @@ const UnitDeleteModal = NiceModal.create(
           remove();
         }}
       >
-        <Typography>Do you want to delete this unit?</Typography>
+        <Typography>Do you want to delete this unit including videos and quizzes?</Typography>
       </ModalContainer>
     );
   },

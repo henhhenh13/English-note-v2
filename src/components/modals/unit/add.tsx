@@ -9,19 +9,26 @@ import ExerciseVideo from '@/components/exercises/video';
 import useUnitsManager from '@/managers/unit/manager';
 import useVideoManager from '@/managers/video/manager';
 import QuizIcon from '@mui/icons-material/Quiz';
-import QuizAddModal from '@/components/modals/quiz/add';
+import QuizAddEditModal from '@/components/modals/quiz/add-edit';
+import { Quiz } from '@/managers/quiz/interface';
+import ExerciseQuizEdit from '@/components/exercises/edit-quiz';
+import useQuizManager from '@/managers/quiz/manager';
 
 const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const { visible, remove } = useModal();
-  const { addUnit, addVideosOnUnitByUnitId } = useUnitsManager();
+  const { addUnit, addVideosOnUnitByUnitId, addQuizzesOnUnitByUnitId } =
+    useUnitsManager();
+  const { addQuizzes } = useQuizManager();
   const { addVideos } = useVideoManager();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const videoAddModal = useModal(VideoAddModal);
-  const quizAddModal = useModal(QuizAddModal);
+  const quizAddEditModal = useModal(QuizAddEditModal);
+
   const [videos, setVideos] = useState<
     { description: string; url: string; title: string }[]
   >([]);
+  const [quizzes, setQuizzes] = useState<Omit<Quiz, 'id' | 'unitId'>[]>([]);
 
   const handleVideoAdd = useCallback(
     (params: { description: string; url: string; title: string }) => {
@@ -42,6 +49,22 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     [],
   );
 
+  const handleQuizAdd = useCallback(
+    async (quiz: Omit<Quiz, 'id' | 'unitId'>) => {
+      setQuizzes((prevState) => [...prevState, quiz]);
+    },
+    [],
+  );
+
+  const handleQuizEdit = useCallback(
+    (quiz: Omit<Quiz, 'id' | 'unitId'>, index: number) => {
+      setQuizzes((prevState) => {
+        return prevState.map((item, i) => (i === index ? quiz : item));
+      });
+    },
+    [],
+  );
+
   const menuItems: CustomMenuProps['items'] = useMemo(() => {
     return [
       {
@@ -55,9 +78,12 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         icon: QuizIcon,
         iconColor: 'primary',
         onClick: () =>
-          quizAddModal.show({
-            mode: 'quiz',
-            onSubmit: async () => {},
+          quizAddEditModal.show({
+            mode: 'add',
+            isMultipleChoice: false,
+            onSubmit: async (quiz) => {
+              await handleQuizAdd(quiz);
+            },
           }),
       },
       {
@@ -65,13 +91,16 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         icon: QuizIcon,
         iconColor: 'primary',
         onClick: () =>
-          quizAddModal.show({
-            mode: 'options',
-            onSubmit: async () => {},
+          quizAddEditModal.show({
+            mode: 'add',
+            isMultipleChoice: true,
+            onSubmit: async (quiz) => {
+              await handleQuizAdd(quiz);
+            },
           }),
       },
     ];
-  }, [videoAddModal, handleVideoAdd, quizAddModal]);
+  }, [videoAddModal, handleVideoAdd, quizAddEditModal, handleQuizAdd]);
 
   const handleAddUnit = useCallback(async () => {
     const { data, flags } = await addUnit({ title, description });
@@ -81,13 +110,36 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         unitId: data.id,
       }));
 
+      const quizzesWithUnitId = quizzes.map((quiz) => ({
+        ...quiz,
+        unitId: data.id,
+      }));
+
       const { data: videosData, flags: videosFlags } =
         await addVideos(videosWithUnitId);
+
+      const { data: quizzesData, flags: quizzesFlags } =
+        await addQuizzes(quizzesWithUnitId);
+
       if (videosFlags.isSuccess && !!videosData) {
         addVideosOnUnitByUnitId(data.id, videosData);
       }
+
+      if (quizzesFlags.isSuccess && !!quizzesData) {
+        addQuizzesOnUnitByUnitId(data.id, quizzesData);
+      }
     }
-  }, [addUnit, addVideos, addVideosOnUnitByUnitId, description, title, videos]);
+  }, [
+    addUnit,
+    title,
+    description,
+    videos,
+    quizzes,
+    addVideos,
+    addQuizzes,
+    addVideosOnUnitByUnitId,
+    addQuizzesOnUnitByUnitId,
+  ]);
 
   const handleVideoDelete = useCallback((index: number) => {
     setVideos((prevState) => prevState.filter((__, i) => i !== index));
@@ -126,7 +178,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         </Stack>
         <Divider />
 
-        <Stack spacing={2} divider={<Divider />}>
+        <Stack spacing={1} divider={<Divider />}>
           {!!videos &&
             videos.map((video, index) => (
               <ExerciseVideo
@@ -135,6 +187,14 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
                 mode="edit"
                 onEdit={(params) => handleVideoEdit(params, index)}
                 onDelete={() => handleVideoDelete(index)}
+              />
+            ))}
+          {!!quizzes &&
+            quizzes.map((quiz, index) => (
+              <ExerciseQuizEdit
+                key={`${quiz.title}-${index}`}
+                quiz={quiz}
+                onEdit={(params) => handleQuizEdit(params, index)}
               />
             ))}
         </Stack>

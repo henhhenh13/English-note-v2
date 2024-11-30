@@ -21,26 +21,38 @@ import useUnitsManager from '@/managers/unit/manager';
 import { useModal } from '@ebay/nice-modal-react';
 import UnitDeleteModal from '@/components/modals/unit/delete';
 import ExerciseQuiz from '@/components/exercises/quiz';
+import useQuizManager from '@/managers/quiz/manager';
 type UnitItemProps = {
   unit: Unit;
 };
 export default function UnitItem({ unit }: UnitItemProps) {
   const { deleteVideos } = useVideoManager();
   const { deleteUnit } = useUnitsManager();
+  const { deleteQuizzes } = useQuizManager();
   const { successToast } = useToastManager();
   const unitDeleteModal = useModal(UnitDeleteModal);
 
   const handleDeleteUnit = useCallback(async () => {
     const videoIds = unit.videos.map((video) => video.id);
-    const { isSuccess } = await deleteVideos(videoIds);
-    if (isSuccess) {
-      successToast('Videos deleted successfully');
+    const quizIds = unit.quizzes.map((quiz) => quiz.id);
+    const { isSuccess: isSuccessVideo } = await deleteVideos(videoIds);
+    const { isSuccess: isSuccessQuiz } = await deleteQuizzes(quizIds);
+    if (isSuccessVideo && isSuccessQuiz) {
+      successToast('Videos and quizzes deleted successfully');
       const { isSuccess } = await deleteUnit(unit.id);
       if (isSuccess) {
         successToast('Unit deleted successfully');
       }
     }
-  }, [deleteUnit, deleteVideos, successToast, unit.id, unit.videos]);
+  }, [
+    deleteQuizzes,
+    deleteUnit,
+    deleteVideos,
+    successToast,
+    unit.id,
+    unit.quizzes,
+    unit.videos,
+  ]);
 
   const menuItems: CustomMenuProps['items'] = useMemo(
     () => [

@@ -17,7 +17,7 @@ export default function QuizAddList({
     <Paper sx={{ p: 2, width: '60%' }} elevation={4}>
       <Stack
         spacing={1}
-        sx={{ minHeight: 490, maxHeight: 490, overflowY: 'auto' }}
+        sx={{ minHeight: 400, maxHeight: 400, overflowY: 'auto' }}
       >
         {!!quizList.length &&
           quizList.map((quiz, index) => (

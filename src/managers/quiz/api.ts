@@ -5,6 +5,7 @@ import snakify from 'snakify-ts';
 
 type UseQuizApi = {
   addQuiz: QuizService['addQuiz'];
+  addQuizzes: QuizService['addQuizzes'];
   deleteQuiz: QuizService['deleteQuiz'];
   deleteQuizzes: QuizService['deleteQuizzes'];
   updateQuiz: QuizService['updateQuiz'];
@@ -15,6 +16,7 @@ export default function useQuizApi(): UseQuizApi {
     id: '',
     title: '',
     description: '',
+    unitId: '',
     isMultipleChoice: false,
     questionList: [],
   };
@@ -27,6 +29,24 @@ export default function useQuizApi(): UseQuizApi {
       .single();
     return {
       data: camelize(data ?? initialQuiz),
+      flags: {
+        isSuccess: !error && !!data,
+        isLoading: false,
+        isError: !!error,
+      },
+    };
+  };
+
+  const addQuizzes: QuizService['addQuizzes'] = async (params) => {
+    const paramsSnakify = params.map((item) => snakify(item));
+    const { data, error } = await supabase
+      .from('quizzes')
+      .insert(paramsSnakify)
+      .select<string, Quiz>('*');
+
+    const dataCamelize = data ? data.map((item) => camelize(item)) : [];
+    return {
+      data: dataCamelize,
       flags: {
         isSuccess: !error && !!data,
         isLoading: false,
@@ -69,5 +89,5 @@ export default function useQuizApi(): UseQuizApi {
     };
   };
 
-  return { addQuiz, deleteQuiz, deleteQuizzes, updateQuiz };
+  return { addQuiz, addQuizzes, deleteQuiz, deleteQuizzes, updateQuiz };
 }

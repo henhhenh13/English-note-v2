@@ -12,6 +12,7 @@ export type Quiz = {
   title: string;
   description: string;
   isMultipleChoice: boolean;
+  unitId: string;
   questionList: QuizQuestionItem[];
 };
 
@@ -32,6 +33,14 @@ export type QuizService = {
     isMultipleChoice: boolean;
     questionList: Quiz['questionList'];
   }) => Promise<{ data: Quiz; flags: ApiStatus }>;
+  addQuizzes: (
+    quizzes: {
+      title: string;
+      description: string;
+      isMultipleChoice: boolean;
+      questionList: Quiz['questionList'];
+    }[],
+  ) => Promise<{ data: Quiz[]; flags: ApiStatus }>;
   deleteQuiz: (quizId: string) => Promise<ApiStatus>;
   deleteQuizzes: (quizIds: string[]) => Promise<ApiStatus>;
   updateQuiz: (quiz: Quiz) => Promise<{ data: Quiz; flags: ApiStatus }>;

@@ -6,10 +6,12 @@ type UseQuizManager = {
   deleteQuiz: QuizService['deleteQuiz'];
   deleteQuizzes: QuizService['deleteQuizzes'];
   updateQuiz: QuizService['updateQuiz'];
+  addQuizzes: QuizService['addQuizzes'];
 };
 
 export default function useQuizManager(): UseQuizManager {
-  const { addQuiz, deleteQuiz, deleteQuizzes, updateQuiz } = useQuizApi();
+  const { addQuiz, deleteQuiz, deleteQuizzes, updateQuiz, addQuizzes } =
+    useQuizApi();
 
-  return { addQuiz, deleteQuiz, deleteQuizzes, updateQuiz };
+  return { addQuiz, deleteQuiz, deleteQuizzes, updateQuiz, addQuizzes };
 }

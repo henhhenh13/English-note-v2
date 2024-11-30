@@ -5,7 +5,7 @@ type QuizFormProps = {
   onAdd: (answer: string, question: string) => void;
 };
 
-export default function QuizForm({ onAdd }: QuizFormProps) {
+export default function QuizAddForm({ onAdd }: QuizFormProps) {
   const [answer, setAnswer] = useState<string>('');
   const [question, setQuestion] = useState<string>('');
 
