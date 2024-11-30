@@ -53,7 +53,7 @@ const VocabularyEditModal = NiceModal.create(
           <TextField
             variant="outlined"
             multiline
-            label="Translation"
+            label="Description"
             value={newDescription || ''}
             onChange={(e) => setNewDescription(e.target.value)}
           />

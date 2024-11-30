@@ -98,7 +98,7 @@ export default function UnitItem({ unit }: UnitItemProps) {
             }}
             expandIcon={<ExpandMoreIcon />}
           >
-            <Typography variant="h6">Lesson 1</Typography>
+            <Typography variant="h6">Exercises</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack>

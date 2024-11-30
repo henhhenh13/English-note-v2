@@ -44,7 +44,7 @@ const VocabularyAddModal = NiceModal.create(
             minRows={3}
             variant="outlined"
             multiline
-            label="Translation"
+            label="Description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
