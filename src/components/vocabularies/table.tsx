@@ -167,6 +167,7 @@ export default function VocabulariesTable({
       disableColumnSorting
       disableDensitySelector
       disableRowSelectionOnClick
+      disableColumnResize
       pageSizeOptions={[10]}
       initialState={{
         pagination: {

@@ -1,4 +1,4 @@
-import { Button, Link, Stack } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 
 import { Typography } from '@mui/material';
 import YouTubeIcon from '@mui/icons-material/YouTube';
@@ -27,27 +27,37 @@ export default function ExerciseVideo({
   const videoViewModal = useModal(VideoViewModal);
   const videoEditModal = useModal(VideoEditModal);
   return (
-    <Stack direction="row" alignItems="center">
-      <Link
-        component="button"
-        underline="hover"
-        variant="body2"
-        sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-        onClick={() => {
-          if (mode === 'view') {
-            videoViewModal.show({ url, description, id, title });
-          }
-          if (mode === 'edit' && onEdit) {
-            videoEditModal.show({
-              video: { title, description, url },
-              onSubmit: onEdit,
-            });
-          }
-        }}
-      >
+    <Stack
+      direction="row"
+      alignItems="center"
+      justifyContent="space-between"
+      sx={{
+        cursor: 'pointer',
+        gap: 1,
+        width: '100%',
+        '&:hover': {
+          color: 'primary.main',
+          textDecoration: 'underline',
+          transition: 'all 0.3s ease',
+        },
+      }}
+      onClick={() => {
+        if (mode === 'view') {
+          videoViewModal.show({ url, description, id, title });
+        }
+        if (mode === 'edit' && onEdit) {
+          videoEditModal.show({
+            video: { title, description, url },
+            onSubmit: onEdit,
+          });
+        }
+      }}
+    >
+      <Stack direction="row" alignItems="center" gap={1}>
         <YouTubeIcon color="error" />
         <Typography variant="body1">{title}</Typography>
-      </Link>
+      </Stack>
+
       {mode === 'edit' && !!onDelete && (
         <Button
           onClick={(e) => {
@@ -58,7 +68,6 @@ export default function ExerciseVideo({
           variant="contained"
           size="small"
           color="error"
-          sx={{ ml: 'auto' }}
         >
           Delete
         </Button>

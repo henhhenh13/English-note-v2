@@ -11,7 +11,7 @@ export type CustomMenuProps = {
   items: {
     title: string;
     icon: SvgIconComponent;
-    iconColor: 'info' | 'error';
+    iconColor: 'info' | 'error' | 'primary';
     onClick: () => void;
   }[];
 };

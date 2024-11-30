@@ -16,14 +16,16 @@ export default function useUnitApi(): UnitApi {
     title: '',
     description: '',
     videos: [],
+    quizzes: [],
   };
   
   const fetchUnits: UnitService['fetchUnits'] = async () => {
     const { data, error } = await supabase
       .from('units')
-      .select<string, Unit>('*, videos(*)');
+      .select<string, Unit>('*, videos(*), quizzes(*)');
 
     const dataCamelize = data ? data.map((item) => camelize(item)) : [];
+
     return {
       data: dataCamelize || [],
       flags: {
@@ -38,7 +40,7 @@ export default function useUnitApi(): UnitApi {
     const { data, error } = await supabase
       .from('units')
       .insert(params)
-      .select<string, Unit>('*, videos(*)')
+      .select<string, Unit>('*, videos(*), quizzes(*)')
       .single();
 
     return {
@@ -56,7 +58,7 @@ export default function useUnitApi(): UnitApi {
       .from('units')
       .update(params)
       .eq('id', params.id)
-      .select<string, Unit>('*')
+      .select<string, Unit>('*, videos(*), quizzes(*)')
       .single();
 
     return {

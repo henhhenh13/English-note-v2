@@ -1,4 +1,5 @@
 import { ApiStatus } from '@/contains/type';
+import { Quiz } from '@/managers/quiz/interface';
 import { Video } from '@/managers/video/interface';
 
 export type Unit = {
@@ -6,6 +7,7 @@ export type Unit = {
   title: string;
   description: string;
   videos: Video[];
+  quizzes: Quiz[];
 };
 
 export type UnitState = {
