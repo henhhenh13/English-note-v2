@@ -3,7 +3,7 @@ import QuizList from '@/components/quiz/list';
 import useToastManager from '@/hooks/use-toast';
 import { Quiz } from '@/managers/quiz/interface';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
-import { Paper, Stack, TextField, Typography } from '@mui/material';
+import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 
 type QuizViewModalProps = {
@@ -29,30 +29,36 @@ const QuizViewModal = NiceModal.create(
       return newQuestionList[0];
     }, [newQuestionList]);
 
-    const handleSubmitAnswer = useCallback(() => {
-      const isCorrect =
-        userAnswer.trim().toLowerCase() ===
-        currentQuestion?.answer.toLocaleLowerCase();
-      if (isCorrect) {
-        setNewQuestionList((prev) =>
-          prev.filter((question) => question.id !== currentQuestion?.id),
-        );
-        setUserAnswerIds([...userAnswerIds, currentQuestion?.id]);
-        successToast('Correct Answer');
-        clearUserAnswer();
-      } else {
-        errorToast('Wrong Answer');
-        setIsError(true);
-      }
-    }, [
-      clearUserAnswer,
-      currentQuestion?.answer,
-      currentQuestion?.id,
-      errorToast,
-      successToast,
-      userAnswer,
-      userAnswerIds,
-    ]);
+    console.log(currentQuestion);
+
+    const handleSubmitAnswer = useCallback(
+      (inputAnswer?: string) => {
+        const answer = inputAnswer || userAnswer;
+        const isCorrect =
+          answer.trim().toLowerCase() ===
+          currentQuestion?.answer.toLocaleLowerCase();
+        if (isCorrect) {
+          setNewQuestionList((prev) =>
+            prev.filter((question) => question.id !== currentQuestion?.id),
+          );
+          setUserAnswerIds([...userAnswerIds, currentQuestion?.id]);
+          successToast('Correct Answer');
+          clearUserAnswer();
+        } else {
+          errorToast('Wrong Answer');
+          setIsError(true);
+        }
+      },
+      [
+        clearUserAnswer,
+        currentQuestion?.answer,
+        currentQuestion?.id,
+        errorToast,
+        successToast,
+        userAnswer,
+        userAnswerIds,
+      ],
+    );
 
     return (
       <ModalContainer
@@ -87,22 +93,38 @@ const QuizViewModal = NiceModal.create(
               <Typography variant="body1" fontWeight={500}>
                 Question: {currentQuestion?.question}
               </Typography>
-              <TextField
-                label="Your Answer"
-                size="small"
-                error={isError}
-                value={userAnswer}
-                autoFocus
-                onChange={(e) => {
-                  setIsError(false);
-                  setUserAnswer(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === 'NumpadEnter') {
-                    handleSubmitAnswer();
-                  }
-                }}
-              />
+
+              {quiz.isMultipleChoice ? (
+                <Stack direction="row" spacing={1}>
+                  {currentQuestion?.options.map((option, index) => (
+                    <Button
+                      key={`${option}-${index}`}
+                      variant="outlined"
+                      size="small"
+                      onClick={() => handleSubmitAnswer(option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </Stack>
+              ) : (
+                <TextField
+                  label="Your Answer"
+                  size="small"
+                  error={isError}
+                  value={userAnswer}
+                  autoFocus
+                  onChange={(e) => {
+                    setIsError(false);
+                    setUserAnswer(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === 'NumpadEnter') {
+                      handleSubmitAnswer();
+                    }
+                  }}
+                />
+              )}
             </Stack>
           </Paper>
         </Stack>
