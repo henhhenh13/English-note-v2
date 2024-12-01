@@ -1,8 +1,10 @@
+import useGeminiApi from '@/managers/gemini/api';
 import useVocabularyApi from '@/managers/vocabulary/api';
 import { Stack, Typography, Button } from '@mui/material';
 
 export default function ApiTestingPage() {
   const { fetchVocabularies } = useVocabularyApi();
+  const { fetchText } = useGeminiApi();
 
   return (
     <Stack spacing={4}>
@@ -14,6 +16,15 @@ export default function ApiTestingPage() {
         variant="contained"
       >
         Fetch vocabularies
+      </Button>
+
+      <Button
+        onClick={async () => {
+          await fetchText('What is love?');
+        }}
+        variant="contained"
+      >
+        Fetch text
       </Button>
 
       <Button variant="contained">Fetch themes</Button>
