@@ -1,10 +1,16 @@
-import SentenceWithAiModal from '@/components/modals/sentence-with-ai/view';
+import AIQuestionModal from '@/components/modals/ai-question/view';
 import { useModal } from '@ebay/nice-modal-react';
 import { Stack, Typography } from '@mui/material';
 import QuizIcon from '@mui/icons-material/Quiz';
+import { AIQuestion } from '@/managers/ai-question/interface';
 
-export default function SentenceWithAi() {
-  const sentenceWithAiModal = useModal(SentenceWithAiModal);
+type ExerciseAIQuestionProps = {
+  aiQuestion: AIQuestion;
+};
+export default function ExerciseAIQuestion({
+  aiQuestion,
+}: ExerciseAIQuestionProps) {
+  const aiQuestionModal = useModal(AIQuestionModal);
   return (
     <Stack
       direction="row"
@@ -20,13 +26,13 @@ export default function SentenceWithAi() {
         },
       }}
       onClick={() => {
-        sentenceWithAiModal.show({
-          onSubmit: async () => {},
+        aiQuestionModal.show({
+          aiQuestion,
         });
       }}
     >
       <QuizIcon color="primary" />
-      <Typography variant="body1">Sentence with AI</Typography>
+      <Typography variant="body1">{aiQuestion.title}</Typography>
     </Stack>
   );
 }

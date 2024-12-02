@@ -4,7 +4,7 @@ export type AIQuestion = {
   id: string;
   title: string;
   description: string;
-  question: string;
+  questions: string[];
   unitId: string;
 };
 
@@ -19,7 +19,7 @@ export type AIQuestionsService = {
   addAiQuestion: (question: {
     title: string;
     description: string;
-    question: string;
+    questions: string[];
   }) => Promise<{ data: AIQuestion; flags: ApiStatus }>;
   deleteAiQuestion: (id: string) => Promise<ApiStatus>;
   deleteAiQuestions: (ids: string[]) => Promise<ApiStatus>;

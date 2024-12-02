@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 type UseGemini = {
   isLoading: boolean;
-  getAnswerFromAI: (answer: string) => Promise<AnswerFromAI>;
+  getAnswerFromAI: (question: string, answer: string) => Promise<AnswerFromAI>;
   isPaused: boolean;
   pauseTime: number;
 };
@@ -19,9 +19,9 @@ export const useGemini = (): UseGemini => {
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   const getAnswerFromAI = useCallback(
-    async (answer: string): Promise<AnswerFromAI> => {
+    async (question: string, answer: string): Promise<AnswerFromAI> => {
       setIsLoading(true);
-      const explanation = await fetchText(getPromptQuiz(answer));
+      const explanation = await fetchText(getPromptQuiz(question, answer));
 
       setIsLoading(false);
       setPauseTime(TIME_PAUSE_WITH_AI);

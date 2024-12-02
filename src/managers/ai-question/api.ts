@@ -14,14 +14,14 @@ export default function useAiQuestionApi(): UseAiQuestionApi {
     id: '',
     title: '',
     description: '',
-    question: '',
+    questions: [],
     unitId: '',
   };
 
   const addAiQuestion: UseAiQuestionApi['addAiQuestion'] = async (params: {
     title: string;
     description: string;
-    question: string;
+    questions: string[];
   }) => {
     const { data, error } = await supabase
       .from('ai_questions')
@@ -44,7 +44,7 @@ export default function useAiQuestionApi(): UseAiQuestionApi {
       id: string;
       title: string;
       description: string;
-      question: string;
+      questions: string[];
     }) => {
       const { data, error } = await supabase
         .from('ai_questions')

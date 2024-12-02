@@ -6,15 +6,23 @@ import { ReactTyped } from 'react-typed';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { convertMillisecondsToSeconds } from '@/utils/convert-milisecons-to-seconds';
 import { AnswerFromAI } from '@/managers/ai-question/interface';
-export default function SentenceWithAiItem() {
+
+type AIQuestionItemProps = {
+  question: string;
+  index: number;
+};
+export default function AIQuestionItem({
+  question,
+  index,
+}: AIQuestionItemProps) {
   const [answer, setAnswer] = useState('');
   const { isLoading, getAnswerFromAI, isPaused, pauseTime } = useGemini();
   const [AIResult, setAIResult] = useState<AnswerFromAI>();
 
   const handleCheckWithAi = useCallback(async () => {
-    const result = await getAnswerFromAI(answer);
+    const result = await getAnswerFromAI(question, answer);
     setAIResult(result);
-  }, [answer, getAnswerFromAI]);
+  }, [answer, getAnswerFromAI, question]);
 
   return (
     <Paper sx={{ p: 2 }} elevation={3}>
@@ -25,7 +33,7 @@ export default function SentenceWithAiItem() {
           justifyContent="space-between"
           spacing={1}
         >
-          <Typography>1. Have you got any brothers and sisters?</Typography>
+          <Typography>{`${index}. ${question}`}</Typography>
           <CircularProgressWithLabel value={AIResult?.percent || 0} />
         </Stack>
         <TextField

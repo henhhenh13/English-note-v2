@@ -22,7 +22,7 @@ import { useModal } from '@ebay/nice-modal-react';
 import UnitDeleteModal from '@/components/modals/unit/delete';
 import ExerciseQuiz from '@/components/exercises/quiz';
 import useQuizManager from '@/managers/quiz/manager';
-import SentenceWithAi from '@/components/exercises/sentence-with-ai';
+import ExerciseAIQuestion from '@/components/exercises/ai-question';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -118,7 +118,13 @@ export default function UnitItem({ unit }: UnitItemProps) {
                 unit.quizzes.map((quiz) => (
                   <ExerciseQuiz quiz={quiz} key={quiz.id} />
                 ))}
-              <SentenceWithAi />
+              {!!unit.aiQuestions &&
+                unit.aiQuestions.map((aiQuestion) => (
+                  <ExerciseAIQuestion
+                    aiQuestion={aiQuestion}
+                    key={aiQuestion.id}
+                  />
+                ))}
             </Stack>
           </AccordionDetails>
         </Accordion>
