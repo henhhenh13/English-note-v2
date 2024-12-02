@@ -1,6 +1,6 @@
 import CircularProgressWithLabel from '@/components/progress/circular-progress-with-label';
 import { useGemini } from '@/managers/gemini/hook';
-import { Stack, Typography, TextField, Paper } from '@mui/material';
+import { Stack, Typography, TextField, Paper, Button } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { ReactTyped } from 'react-typed';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -10,10 +10,12 @@ import { AnswerFromAI } from '@/managers/ai-question/interface';
 type AIQuestionItemProps = {
   question: string;
   index: number;
+  onDelete?: () => void;
 };
 export default function AIQuestionItem({
   question,
   index,
+  onDelete,
 }: AIQuestionItemProps) {
   const [answer, setAnswer] = useState('');
   const { isLoading, getAnswerFromAI, isPaused, pauseTime } = useGemini();
@@ -51,19 +53,36 @@ export default function AIQuestionItem({
           </Typography>
         )}
 
-        <LoadingButton
-          variant="contained"
-          color="primary"
-          size="small"
-          disabled={!answer || isLoading || isPaused}
-          sx={{ width: 'fit-content', ml: 'auto', mt: 2 }}
-          loading={isLoading}
-          onClick={handleCheckWithAi}
+        <Stack
+          direction="row"
+          justifyContent={onDelete ? 'space-between' : 'flex-end'}
+          alignItems="center"
+          sx={{ mt: 2 }}
         >
-          {isPaused
-            ? `Paused: ${convertMillisecondsToSeconds(pauseTime)}s`
-            : 'Check with AI'}
-        </LoadingButton>
+          {!!onDelete && (
+            <Button
+              variant="contained"
+              color="error"
+              size="small"
+              onClick={onDelete}
+            >
+              Delete
+            </Button>
+          )}
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            size="small"
+            disabled={!answer || isLoading || isPaused}
+            sx={{ width: 'fit-content', ml: 'auto' }}
+            loading={isLoading}
+            onClick={handleCheckWithAi}
+          >
+            {isPaused
+              ? `Paused: ${convertMillisecondsToSeconds(pauseTime)}s`
+              : 'Check with AI'}
+          </LoadingButton>
+        </Stack>
       </Stack>
     </Paper>
   );

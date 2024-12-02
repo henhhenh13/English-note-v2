@@ -21,6 +21,16 @@ export type AIQuestionsService = {
     description: string;
     questions: string[];
   }) => Promise<{ data: AIQuestion; flags: ApiStatus }>;
+  addAiQuestions: (
+    questions: {
+      title: string;
+      description: string;
+      questions: string[];
+    }[],
+  ) => Promise<{
+    data: AIQuestion[];
+    flags: ApiStatus;
+  }>;
   deleteAiQuestion: (id: string) => Promise<ApiStatus>;
   deleteAiQuestions: (ids: string[]) => Promise<ApiStatus>;
   updateAiQuestion: (

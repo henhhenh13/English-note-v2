@@ -5,6 +5,7 @@ import camelize from 'camelize-ts';
 import snakify from 'snakify-ts';
 type UseAiQuestionApi = {
   addAiQuestion: AIQuestionsService['addAiQuestion'];
+  addAiQuestions: AIQuestionsService['addAiQuestions'];
   updateAiQuestion: AIQuestionsService['updateAiQuestion'];
   deleteAiQuestion: AIQuestionsService['deleteAiQuestion'];
   deleteAiQuestions: AIQuestionsService['deleteAiQuestions'];
@@ -31,6 +32,29 @@ export default function useAiQuestionApi(): UseAiQuestionApi {
 
     return {
       data: camelize(data) || initialAiQuestion,
+      flags: {
+        isLoading: false,
+        isError: !!error,
+        isSuccess: !!data && !error,
+      },
+    };
+  };
+
+  const addAiQuestions: UseAiQuestionApi['addAiQuestions'] = async (
+    params: {
+      title: string;
+      description: string;
+      questions: string[];
+    }[],
+  ) => {
+    const paramsSnakify = params.map((item) => snakify(item));
+    const { data, error } = await supabase
+      .from('ai_questions')
+      .insert(paramsSnakify)
+      .select<string, AIQuestion>('*');
+
+    return {
+      data: data ? data.map((item) => camelize(item)) : [],
       flags: {
         isLoading: false,
         isError: !!error,
@@ -91,6 +115,7 @@ export default function useAiQuestionApi(): UseAiQuestionApi {
 
   return {
     addAiQuestion,
+    addAiQuestions,
     updateAiQuestion,
     deleteAiQuestion,
     deleteAiQuestions,

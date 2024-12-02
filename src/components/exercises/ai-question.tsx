@@ -1,7 +1,8 @@
 import AIQuestionModal from '@/components/modals/ai-question/view';
 import { useModal } from '@ebay/nice-modal-react';
 import { Stack, Typography } from '@mui/material';
-import QuizIcon from '@mui/icons-material/Quiz';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+
 import { AIQuestion } from '@/managers/ai-question/interface';
 
 type ExerciseAIQuestionProps = {
@@ -31,7 +32,7 @@ export default function ExerciseAIQuestion({
         });
       }}
     >
-      <QuizIcon color="primary" />
+      <SmartToyIcon color="primary" />
       <Typography variant="body1">{aiQuestion.title}</Typography>
     </Stack>
   );
