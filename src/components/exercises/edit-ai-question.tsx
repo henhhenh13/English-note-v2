@@ -1,21 +1,28 @@
-import { Button, Stack } from '@mui/material';
-
-import { Typography } from '@mui/material';
-import QuizIcon from '@mui/icons-material/Quiz';
 import { useModal } from '@ebay/nice-modal-react';
-import { Quiz } from '@/managers/quiz/interface';
-import QuizAddEditModal from '@/components/modals/quiz/add-edit';
-type ExerciseQuizEditProps = {
-  quiz: Omit<Quiz, 'id' | 'unitId'>;
-  onEdit: (quiz: Omit<Quiz, 'id' | 'unitId'>) => void;
+import { Button, Stack, Typography } from '@mui/material';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+
+import AIQuestionAddEditModal from '@/components/modals/ai-question/add-edit';
+
+type ExerciseAIQuestionEditProps = {
+  aiQuestion: {
+    title: string;
+    questions: string[];
+    description: string;
+  };
+  onEdit: (aiQuestion: {
+    title: string;
+    questions: string[];
+    description: string;
+  }) => void;
   onDelete: () => void;
 };
-export default function ExerciseQuizEdit({
-  quiz,
+export default function ExerciseAIQuestionEdit({
+  aiQuestion,
   onEdit,
   onDelete,
-}: ExerciseQuizEditProps) {
-  const quizAddEditModal = useModal(QuizAddEditModal);
+}: ExerciseAIQuestionEditProps) {
+  const aiQuestionAddEditModal = useModal(AIQuestionAddEditModal);
   return (
     <Stack
       direction="row"
@@ -30,11 +37,11 @@ export default function ExerciseQuizEdit({
         alignItems="center"
         gap={1}
         onClick={() => {
-          quizAddEditModal.show({
+          aiQuestionAddEditModal.show({
             mode: 'edit',
-            quiz,
-            onSubmit: (quiz) => {
-              onEdit(quiz);
+            aiQuestion,
+            onSubmit: (aiQuestion) => {
+              onEdit(aiQuestion);
             },
           });
         }}
@@ -48,8 +55,8 @@ export default function ExerciseQuizEdit({
           },
         }}
       >
-        <QuizIcon color="primary" />
-        <Typography variant="body1">{quiz.title}</Typography>
+        <SmartToyIcon color="primary" />
+        <Typography variant="body1">{aiQuestion.title}</Typography>
       </Stack>
       <Button
         sx={{ ml: 'auto' }}

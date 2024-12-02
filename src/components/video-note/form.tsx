@@ -1,8 +1,8 @@
-import convertToHMS from '@/utils/convert-stringt-hms';
 import { Paper, Stack, Typography, Button, TextField } from '@mui/material';
 import { useCallback, useState } from 'react';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
+import { convertSecondsToHMS } from '@/utils/convert-string-hms';
 type VideoNoteFormProps = {
   videoTime: number;
   onSubmit: (title: string, description: string) => void;
@@ -34,7 +34,7 @@ export default function VideoNoteForm({
             ) : (
               <PauseCircleIcon sx={{ mr: 0.5 }} />
             )}
-            {convertToHMS(videoTime)}
+            {convertSecondsToHMS(videoTime)}
           </Button>
         </Stack>
         <Stack spacing={2}>

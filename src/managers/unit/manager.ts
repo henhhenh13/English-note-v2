@@ -1,4 +1,5 @@
 import { ApiStatus } from '@/contains/type';
+import { AIQuestion } from '@/managers/ai-question/interface';
 import { Quiz } from '@/managers/quiz/interface';
 import useUnitApi from '@/managers/unit/api';
 import { Unit } from '@/managers/unit/interface';
@@ -17,6 +18,10 @@ type UseUnitsManager = {
   deleteUnit: (id: string) => Promise<ApiStatus>;
   addVideosOnUnitByUnitId: (unitId: string, videos: Video[]) => void;
   addQuizzesOnUnitByUnitId: (unitId: string, quizzes: Quiz[]) => void;
+  addAiQuestionsOnUnitByUnitId: (
+    unitId: string,
+    aiQuestions: AIQuestion[],
+  ) => void;
   units: Unit[];
   flags: ApiStatus;
 };
@@ -109,9 +114,6 @@ export default function useUnitsManager(): UseUnitsManager {
         setUnitsState((prevState) => {
           const unit = prevState.units.get(unitId);
 
-
-          console.log('unit', unit);
-
           if (unit) {
             prevState.units.set(unitId, {
               ...unit,
@@ -124,7 +126,26 @@ export default function useUnitsManager(): UseUnitsManager {
       [setUnitsState],
     );
 
+  const addAiQuestionsOnUnitByUnitId: UseUnitsManager['addAiQuestionsOnUnitByUnitId'] =
+    useCallback(
+      async (unitId, aiQuestions) => {
+        setUnitsState((prevState) => {
+          const unit = prevState.units.get(unitId);
+
+          if (unit) {
+            prevState.units.set(unitId, {
+              ...unit,
+              aiQuestions: [...unit.aiQuestions, ...aiQuestions],
+            });
+          }
+          return { ...prevState };
+        });
+      },
+      [setUnitsState],
+    );
+
   return {
+    addAiQuestionsOnUnitByUnitId,
     addQuizzesOnUnitByUnitId,
     addVideosOnUnitByUnitId,
     fetchUnits,

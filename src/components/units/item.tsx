@@ -22,6 +22,8 @@ import { useModal } from '@ebay/nice-modal-react';
 import UnitDeleteModal from '@/components/modals/unit/delete';
 import ExerciseQuiz from '@/components/exercises/quiz';
 import useQuizManager from '@/managers/quiz/manager';
+import ExerciseAIQuestion from '@/components/exercises/ai-question';
+import useAiQuestionManager from '@/managers/ai-question/manager';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -29,26 +31,32 @@ export default function UnitItem({ unit }: UnitItemProps) {
   const { deleteVideos } = useVideoManager();
   const { deleteUnit } = useUnitsManager();
   const { deleteQuizzes } = useQuizManager();
+  const { deleteAiQuestions } = useAiQuestionManager();
   const { successToast } = useToastManager();
   const unitDeleteModal = useModal(UnitDeleteModal);
 
   const handleDeleteUnit = useCallback(async () => {
     const videoIds = unit.videos.map((video) => video.id);
     const quizIds = unit.quizzes.map((quiz) => quiz.id);
+    const aiQuestionIds = unit.aiQuestions.map((aiQuestion) => aiQuestion.id);
     const { isSuccess: isSuccessVideo } = await deleteVideos(videoIds);
     const { isSuccess: isSuccessQuiz } = await deleteQuizzes(quizIds);
-    if (isSuccessVideo && isSuccessQuiz) {
-      successToast('Videos and quizzes deleted successfully');
+    const { isSuccess: isSuccessAiQuestion } =
+      await deleteAiQuestions(aiQuestionIds);
+    if (isSuccessVideo && isSuccessQuiz && isSuccessAiQuestion) {
+      successToast('Videos, quizzes and ai questions deleted successfully');
       const { isSuccess } = await deleteUnit(unit.id);
       if (isSuccess) {
         successToast('Unit deleted successfully');
       }
     }
   }, [
+    deleteAiQuestions,
     deleteQuizzes,
     deleteUnit,
     deleteVideos,
     successToast,
+    unit.aiQuestions,
     unit.id,
     unit.quizzes,
     unit.videos,
@@ -116,6 +124,13 @@ export default function UnitItem({ unit }: UnitItemProps) {
               {!!unit.quizzes &&
                 unit.quizzes.map((quiz) => (
                   <ExerciseQuiz quiz={quiz} key={quiz.id} />
+                ))}
+              {!!unit.aiQuestions &&
+                unit.aiQuestions.map((aiQuestion) => (
+                  <ExerciseAIQuestion
+                    aiQuestion={aiQuestion}
+                    key={aiQuestion.id}
+                  />
                 ))}
             </Stack>
           </AccordionDetails>
