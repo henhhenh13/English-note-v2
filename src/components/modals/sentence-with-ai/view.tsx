@@ -22,7 +22,7 @@ const SentenceWithAiModal = NiceModal.create(
           remove();
         }}
       >
-        <Stack sx={{ width: 660 }}>
+        <Stack sx={{ width: 660 }} spacing={1.5}>
           <Typography variant="h6" fontWeight="bold">
             Ask a friend these questions. Then write sentences about your friend
             and their family.

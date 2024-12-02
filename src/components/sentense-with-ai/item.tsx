@@ -1,25 +1,21 @@
 import CircularProgressWithLabel from '@/components/progress/circular-progress-with-label';
-import useGeminiApi from '@/managers/gemini/api';
-import { cleanText, getPromptQuiz } from '@/managers/gemini/helper';
-import { Stack, Typography, TextField, Button, Paper } from '@mui/material';
+import { useGemini } from '@/managers/gemini/hook';
+import { Stack, Typography, TextField, Paper } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { ReactTyped } from 'react-typed';
-
+import LoadingButton from '@mui/lab/LoadingButton';
+import { convertMillisecondsToSeconds } from '@/utils/convert-milisecons-to-seconds';
+import { AnswerFromAI } from '@/managers/ai-question/interface';
 export default function SentenceWithAiItem() {
   const [answer, setAnswer] = useState('');
-  const { fetchText } = useGeminiApi();
-  const [AIResult, setAIResult] = useState<{
-    wrongWords: string[];
-    correctAnswer: string;
-    explanation: string;
-    percent: number;
-  }>();
+  const { isLoading, getAnswerFromAI, isPaused, pauseTime } = useGemini();
+  const [AIResult, setAIResult] = useState<AnswerFromAI>();
 
   const handleCheckWithAi = useCallback(async () => {
-    const explanation = await fetchText(getPromptQuiz(answer));
+    const result = await getAnswerFromAI(answer);
+    setAIResult(result);
+  }, [answer, getAnswerFromAI]);
 
-    setAIResult(JSON.parse(cleanText(explanation)));
-  }, [answer, fetchText]);
   return (
     <Paper sx={{ p: 2 }} elevation={3}>
       <Stack>
@@ -47,16 +43,19 @@ export default function SentenceWithAiItem() {
           </Typography>
         )}
 
-        <Button
+        <LoadingButton
           variant="contained"
           color="primary"
-          sx={{ width: 'fit-content', ml: 'auto', mt: 2 }}
           size="small"
-          disabled={!answer}
+          disabled={!answer || isLoading || isPaused}
+          sx={{ width: 'fit-content', ml: 'auto', mt: 2 }}
+          loading={isLoading}
           onClick={handleCheckWithAi}
         >
-          Check with AI
-        </Button>
+          {isPaused
+            ? `Paused: ${convertMillisecondsToSeconds(pauseTime)}s`
+            : 'Check with AI'}
+        </LoadingButton>
       </Stack>
     </Paper>
   );

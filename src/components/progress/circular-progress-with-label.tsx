@@ -3,6 +3,7 @@ import {
   Box,
   CircularProgress,
   Typography,
+  Paper,
 } from '@mui/material';
 
 type CircularProgressWithLabelProps = CircularProgressProps & {
@@ -12,9 +13,27 @@ type CircularProgressWithLabelProps = CircularProgressProps & {
 export default function CircularProgressWithLabel(
   props: CircularProgressWithLabelProps,
 ) {
+  const getColor = () => {
+    if (props.value >= 75) return 'success';
+    if (props.value >= 40) return 'warning';
+    return 'error';
+  };
+
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <CircularProgress variant="determinate" {...props} />
+    <Paper
+      sx={{
+        position: 'relative',
+        display: 'inline-flex',
+        borderRadius: '100%',
+      }}
+      variant="outlined"
+    >
+      <CircularProgress
+        variant="determinate"
+        {...props}
+        color={getColor()}
+        thickness={4.2}
+      />
       <Box
         sx={{
           top: 0,
@@ -33,6 +52,6 @@ export default function CircularProgressWithLabel(
           sx={{ color: 'text.secondary' }}
         >{`${Math.round(props.value)}%`}</Typography>
       </Box>
-    </Box>
+    </Paper>
   );
 }

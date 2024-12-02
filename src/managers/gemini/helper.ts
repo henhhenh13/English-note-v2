@@ -5,7 +5,7 @@ wrongWords: string[],
 correctAnswer: string,
 explanation: string,
 percent: number,
-} phần explanation bằng tiếng việt không vượt quá 60 từ. Chỉ trả về text với dạng json.stringify
+} phần explanation bằng tiếng việt nếu đúng không vượt quá 60 từ, nếu sai cần bổ sụng thêm đáp án đúng vào explanation có thể vượt quá quá 60 từ. Chỉ trả về text với dạng json.stringify
     `;
 };
 

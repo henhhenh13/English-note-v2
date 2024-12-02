@@ -16,7 +16,6 @@ export default function useGeminiApi(): UseGeminiApi {
       prompt
     });
 
-    console.log(text);
     return text;
   };
 
