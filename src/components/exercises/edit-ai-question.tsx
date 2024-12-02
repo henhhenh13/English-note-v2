@@ -27,26 +27,34 @@ export default function ExerciseAIQuestionEdit({
     <Stack
       direction="row"
       alignItems="center"
+      justifyContent="space-between"
       sx={{
-        cursor: 'pointer',
         width: '100%',
-        '&:hover': {
-          color: 'primary.main',
-          textDecoration: 'underline',
-          transition: 'all 0.3s ease',
-        },
-      }}
-      onClick={() => {
-        aiQuestionAddEditModal.show({
-          mode: 'edit',
-          aiQuestion,
-          onSubmit: (aiQuestion) => {
-            onEdit(aiQuestion);
-          },
-        });
       }}
     >
-      <Stack direction="row" alignItems="center" gap={1}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap={1}
+        onClick={() => {
+          aiQuestionAddEditModal.show({
+            mode: 'edit',
+            aiQuestion,
+            onSubmit: (aiQuestion) => {
+              onEdit(aiQuestion);
+            },
+          });
+        }}
+        sx={{
+          cursor: 'pointer',
+          width: '100%',
+          '&:hover': {
+            color: 'primary.main',
+            textDecoration: 'underline',
+            transition: 'all 0.3s ease',
+          },
+        }}
+      >
         <SmartToyIcon color="primary" />
         <Typography variant="body1">{aiQuestion.title}</Typography>
       </Stack>

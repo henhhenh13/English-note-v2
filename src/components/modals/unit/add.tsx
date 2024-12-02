@@ -207,6 +207,10 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     setAiQuestions((prevState) => prevState.filter((__, i) => i !== index));
   }, []);
 
+  const handleQuizDelete = useCallback((index: number) => {
+    setQuizzes((prevState) => prevState.filter((__, i) => i !== index));
+  }, []);
+
   return (
     <ModalContainer
       title="Unit Add"
@@ -257,6 +261,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
                 key={`${quiz.title}-${index}`}
                 quiz={quiz}
                 onEdit={(params) => handleQuizEdit(params, index)}
+                onDelete={() => handleQuizDelete(index)}
               />
             ))}
           {!!aiQuestions &&
