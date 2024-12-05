@@ -1,5 +1,6 @@
+import useToastManager from '@/hooks/use-toast';
 import { Paper, TextField, Typography } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 const sentence =
   'The washing machine is washing the text washing washing washing washing washing washing washing washing washing.';
 const words = [
@@ -12,11 +13,18 @@ type AnswerTextFieldProps = {
   answer: string;
 };
 const AnswerTextField = ({ answer }: AnswerTextFieldProps) => {
+  const { successToast } = useToastManager();
   const [value, setValue] = useState('');
 
   const isSuccess = useMemo(() => {
     return value === answer;
   }, [answer, value]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      successToast('Correct');
+    }
+  }, [isSuccess, successToast]);
 
   return (
     <TextField
