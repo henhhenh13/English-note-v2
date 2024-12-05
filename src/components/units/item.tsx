@@ -24,6 +24,7 @@ import ExerciseQuiz from '@/components/exercises/quiz';
 import useQuizManager from '@/managers/quiz/manager';
 import ExerciseAIQuestion from '@/components/exercises/ai-question';
 import useAiQuestionManager from '@/managers/ai-question/manager';
+import ExerciseCompleteSentence from '@/components/exercises/complete-sentence';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -132,6 +133,7 @@ export default function UnitItem({ unit }: UnitItemProps) {
                     key={aiQuestion.id}
                   />
                 ))}
+              <ExerciseCompleteSentence />
             </Stack>
           </AccordionDetails>
         </Accordion>
