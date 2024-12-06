@@ -18,8 +18,9 @@ export default function useUnitApi(): UnitApi {
     videos: [],
     quizzes: [],
     aiQuestions: [],
+    completeSentences: [],
   };
-  const unitSelect = '*, videos(*), quizzes(*), ai_questions(*)';
+  const unitSelect = '*, videos(*), quizzes(*), ai_questions(*), complete_sentences(*)';
   
   const fetchUnits: UnitService['fetchUnits'] = async () => {
     const { data, error } = await supabase

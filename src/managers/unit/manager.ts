@@ -1,5 +1,6 @@
 import { ApiStatus } from '@/contains/type';
 import { AIQuestion } from '@/managers/ai-question/interface';
+import { CompleteSentence } from '@/managers/complete-sentence/interface';
 import { Quiz } from '@/managers/quiz/interface';
 import useUnitApi from '@/managers/unit/api';
 import { Unit } from '@/managers/unit/interface';
@@ -21,6 +22,10 @@ type UseUnitsManager = {
   addAiQuestionsOnUnitByUnitId: (
     unitId: string,
     aiQuestions: AIQuestion[],
+  ) => void;
+  addCompleteSentencesOnUnitByUnitId: (
+    unitId: string,
+    completeSentences: CompleteSentence[],
   ) => void;
   units: Unit[];
   flags: ApiStatus;
@@ -144,7 +149,29 @@ export default function useUnitsManager(): UseUnitsManager {
       [setUnitsState],
     );
 
+  const addCompleteSentencesOnUnitByUnitId: UseUnitsManager['addCompleteSentencesOnUnitByUnitId'] =
+    useCallback(
+      async (unitId, completeSentences) => {
+        setUnitsState((prevState) => {
+          const unit = prevState.units.get(unitId);
+
+          if (unit) {
+            prevState.units.set(unitId, {
+              ...unit,
+              completeSentences: [
+                ...unit.completeSentences,
+                ...completeSentences,
+              ],
+            });
+          }
+          return { ...prevState };
+        });
+      },
+      [setUnitsState],
+    );
+
   return {
+    addCompleteSentencesOnUnitByUnitId,
     addAiQuestionsOnUnitByUnitId,
     addQuizzesOnUnitByUnitId,
     addVideosOnUnitByUnitId,

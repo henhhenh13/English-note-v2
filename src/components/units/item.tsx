@@ -24,6 +24,8 @@ import ExerciseQuiz from '@/components/exercises/quiz';
 import useQuizManager from '@/managers/quiz/manager';
 import ExerciseAIQuestion from '@/components/exercises/ai-question';
 import useAiQuestionManager from '@/managers/ai-question/manager';
+import ExerciseCompleteSentence from '@/components/exercises/complete-sentence';
+import useCompleteSentenceManager from '@/managers/complete-sentence/manager';
 type UnitItemProps = {
   unit: Unit;
 };
@@ -32,6 +34,7 @@ export default function UnitItem({ unit }: UnitItemProps) {
   const { deleteUnit } = useUnitsManager();
   const { deleteQuizzes } = useQuizManager();
   const { deleteAiQuestions } = useAiQuestionManager();
+  const { deleteCompleteSentences } = useCompleteSentenceManager();
   const { successToast } = useToastManager();
   const unitDeleteModal = useModal(UnitDeleteModal);
 
@@ -39,12 +42,25 @@ export default function UnitItem({ unit }: UnitItemProps) {
     const videoIds = unit.videos.map((video) => video.id);
     const quizIds = unit.quizzes.map((quiz) => quiz.id);
     const aiQuestionIds = unit.aiQuestions.map((aiQuestion) => aiQuestion.id);
+    const completeSentenceIds = unit.completeSentences.map(
+      (completeSentence) => completeSentence.id,
+    );
     const { isSuccess: isSuccessVideo } = await deleteVideos(videoIds);
     const { isSuccess: isSuccessQuiz } = await deleteQuizzes(quizIds);
     const { isSuccess: isSuccessAiQuestion } =
       await deleteAiQuestions(aiQuestionIds);
-    if (isSuccessVideo && isSuccessQuiz && isSuccessAiQuestion) {
-      successToast('Videos, quizzes and ai questions deleted successfully');
+    const { isSuccess: isSuccessCompleteSentence } =
+      await deleteCompleteSentences(completeSentenceIds);
+
+    if (
+      isSuccessVideo &&
+      isSuccessQuiz &&
+      isSuccessAiQuestion &&
+      isSuccessCompleteSentence
+    ) {
+      successToast(
+        'Videos, quizzes, ai questions and complete sentences deleted successfully',
+      );
       const { isSuccess } = await deleteUnit(unit.id);
       if (isSuccess) {
         successToast('Unit deleted successfully');
@@ -52,11 +68,13 @@ export default function UnitItem({ unit }: UnitItemProps) {
     }
   }, [
     deleteAiQuestions,
+    deleteCompleteSentences,
     deleteQuizzes,
     deleteUnit,
     deleteVideos,
     successToast,
     unit.aiQuestions,
+    unit.completeSentences,
     unit.id,
     unit.quizzes,
     unit.videos,
@@ -130,6 +148,13 @@ export default function UnitItem({ unit }: UnitItemProps) {
                   <ExerciseAIQuestion
                     aiQuestion={aiQuestion}
                     key={aiQuestion.id}
+                  />
+                ))}
+              {!!unit.completeSentences &&
+                unit.completeSentences.map((completeSentence) => (
+                  <ExerciseCompleteSentence
+                    completeSentence={completeSentence}
+                    key={completeSentence.id}
                   />
                 ))}
             </Stack>

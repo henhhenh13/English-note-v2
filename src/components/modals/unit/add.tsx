@@ -17,6 +17,10 @@ import AIQuestionAddEditModal from '@/components/modals/ai-question/add-edit';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ExerciseAIQuestionEdit from '@/components/exercises/edit-ai-question';
 import useAiQuestionManager from '@/managers/ai-question/manager';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import CompleteSentenceEditAddModal from '@/components/modals/complete-sentence/edit-add';
+import ExerciseCompleteSentenceEdit from '@/components/exercises/edit-complete-sentence';
+import useCompleteSentenceManager from '@/managers/complete-sentence/manager';
 
 const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const { visible, remove } = useModal();
@@ -25,15 +29,20 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     addVideosOnUnitByUnitId,
     addQuizzesOnUnitByUnitId,
     addAiQuestionsOnUnitByUnitId,
+    addCompleteSentencesOnUnitByUnitId,
   } = useUnitsManager();
   const { addQuizzes } = useQuizManager();
   const { addVideos } = useVideoManager();
   const { addAiQuestions } = useAiQuestionManager();
+  const { addCompleteSentences } = useCompleteSentenceManager();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
   const videoAddModal = useModal(VideoAddModal);
   const quizAddEditModal = useModal(QuizAddEditModal);
   const aiQuestionAddEditModal = useModal(AIQuestionAddEditModal);
+  const completeSentenceEditAddModal = useModal(CompleteSentenceEditAddModal);
 
   const [videos, setVideos] = useState<
     { description: string; url: string; title: string }[]
@@ -41,6 +50,16 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const [quizzes, setQuizzes] = useState<Omit<Quiz, 'id' | 'unitId'>[]>([]);
   const [aiQuestions, setAiQuestions] = useState<
     { title: string; questions: string[]; description: string }[]
+  >([]);
+  const [completeSentences, setCompleteSentences] = useState<
+    {
+      title: string;
+      suggestWords: string[];
+      questionList: {
+        sentence: string;
+        selectedWords: { index: number; word: string; id: string }[];
+      }[];
+    }[]
   >([]);
 
   const handleVideoAdd = useCallback(
@@ -89,6 +108,57 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     [aiQuestions],
   );
 
+  const handleAiQuestionEdit = useCallback(
+    (
+      aiQuestion: {
+        title: string;
+        questions: string[];
+        description: string;
+      },
+      index: number,
+    ) => {
+      setAiQuestions((prevState) => {
+        return prevState.map((item, i) => (i === index ? aiQuestion : item));
+      });
+    },
+    [],
+  );
+
+  const handleCompleteSentenceAdd = useCallback(
+    (completeSentence: {
+      title: string;
+      suggestWords: string[];
+      questionList: {
+        sentence: string;
+        selectedWords: { index: number; word: string; id: string }[];
+      }[];
+    }) => {
+      setCompleteSentences([...completeSentences, completeSentence]);
+    },
+    [completeSentences],
+  );
+
+  const handleCompleteSentenceEdit = useCallback(
+    (
+      completeSentence: {
+        title: string;
+        suggestWords: string[];
+        questionList: {
+          sentence: string;
+          selectedWords: { index: number; word: string; id: string }[];
+        }[];
+      },
+      index: number,
+    ) => {
+      setCompleteSentences((prevState) => {
+        return prevState.map((item, i) =>
+          i === index ? completeSentence : item,
+        );
+      });
+    },
+    [],
+  );
+
   const menuItems: CustomMenuProps['items'] = useMemo(() => {
     return [
       {
@@ -135,6 +205,18 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
             },
           }),
       },
+      {
+        title: 'Complete Sentence',
+        icon: QuestionAnswerIcon,
+        iconColor: 'primary',
+        onClick: () =>
+          completeSentenceEditAddModal.show({
+            mode: 'add',
+            onSubmit: (completeSentence) => {
+              handleCompleteSentenceAdd(completeSentence);
+            },
+          }),
+      },
     ];
   }, [
     videoAddModal,
@@ -143,6 +225,8 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     handleQuizAdd,
     aiQuestionAddEditModal,
     handleAiQuestionAdd,
+    completeSentenceEditAddModal,
+    handleCompleteSentenceAdd,
   ]);
 
   const handleAddUnit = useCallback(async () => {
@@ -163,6 +247,13 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
         unitId: data.id,
       }));
 
+      const completeSentencesWithUnitId = completeSentences.map(
+        (completeSentence) => ({
+          ...completeSentence,
+          unitId: data.id,
+        }),
+      );
+
       const { data: videosData, flags: videosFlags } =
         await addVideos(videosWithUnitId);
 
@@ -171,6 +262,9 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
 
       const { data: aiQuestionsData, flags: aiQuestionsFlags } =
         await addAiQuestions(aiQuestionsWithUnitId);
+
+      const { data: completeSentencesData, flags: completeSentencesFlags } =
+        await addCompleteSentences(completeSentencesWithUnitId);
 
       if (videosFlags.isSuccess && !!videosData) {
         addVideosOnUnitByUnitId(data.id, videosData);
@@ -183,6 +277,10 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
       if (aiQuestionsFlags.isSuccess && !!aiQuestionsData) {
         addAiQuestionsOnUnitByUnitId(data.id, aiQuestionsData);
       }
+
+      if (completeSentencesFlags.isSuccess && !!completeSentencesData) {
+        addCompleteSentencesOnUnitByUnitId(data.id, completeSentencesData);
+      }
     }
   }, [
     addUnit,
@@ -191,12 +289,15 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     videos,
     quizzes,
     aiQuestions,
+    completeSentences,
     addVideos,
     addQuizzes,
     addAiQuestions,
+    addCompleteSentences,
     addVideosOnUnitByUnitId,
     addQuizzesOnUnitByUnitId,
     addAiQuestionsOnUnitByUnitId,
+    addCompleteSentencesOnUnitByUnitId,
   ]);
 
   const handleVideoDelete = useCallback((index: number) => {
@@ -209,6 +310,12 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
 
   const handleQuizDelete = useCallback((index: number) => {
     setQuizzes((prevState) => prevState.filter((__, i) => i !== index));
+  }, []);
+
+  const handleCompleteSentenceDelete = useCallback((index: number) => {
+    setCompleteSentences((prevState) =>
+      prevState.filter((__, i) => i !== index),
+    );
   }, []);
 
   return (
@@ -269,8 +376,18 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
               <ExerciseAIQuestionEdit
                 key={`${aiQuestion.title}-${index}`}
                 aiQuestion={aiQuestion}
-                onEdit={(params) => console.log(params, index)}
+                onEdit={(params) => handleAiQuestionEdit(params, index)}
                 onDelete={() => handleAiQuestionDelete(index)}
+              />
+            ))}
+
+          {!!completeSentences &&
+            completeSentences.map((completeSentence, index) => (
+              <ExerciseCompleteSentenceEdit
+                key={`${completeSentence.title}-${index}`}
+                completeSentence={completeSentence}
+                onEdit={(params) => handleCompleteSentenceEdit(params, index)}
+                onDelete={() => handleCompleteSentenceDelete(index)}
               />
             ))}
         </Stack>
