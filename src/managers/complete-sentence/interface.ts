@@ -7,7 +7,6 @@ export type CompleteSentence = {
   questionList: {
     selectedWords: { word: string; index: number; id: string }[];
     sentence: string;
-    id: string;
   }[];
   suggestWords: string[] | null;
 };
@@ -19,11 +18,24 @@ export type CompleteSentenceService = {
     questionList: {
       selectedWords: { word: string; index: number; id: string }[];
       sentence: string;
-      id: string;
     }[];
     suggestWords: string[] | null;
   }) => Promise<{
     data: CompleteSentence;
+    flags: ApiStatus;
+  }>;
+  addCompleteSentences: (
+    params: {
+      title: string;
+      unitId: string;
+      questionList: {
+        selectedWords: { word: string; index: number; id: string }[];
+        sentence: string;
+      }[];
+      suggestWords: string[] | null;
+    }[],
+  ) => Promise<{
+    data: CompleteSentence[];
     flags: ApiStatus;
   }>;
   updateCompleteSentence: (

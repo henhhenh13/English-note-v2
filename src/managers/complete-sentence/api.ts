@@ -32,6 +32,23 @@ export default function useCompleteSentenceApi(): CompleteSentenceService {
       };
     };
 
+  const addCompleteSentences: CompleteSentenceService['addCompleteSentences'] =
+    async (params) => {
+      const paramsSnakify = params.map((item) => snakify(item));
+      const { data, error } = await supabase
+        .from('complete_sentences')
+        .insert(paramsSnakify)
+        .select<string, CompleteSentence>('*');
+      return {
+        data: camelize(data) || [],
+        flags: {
+          isSuccess: !!data,
+          isLoading: false,
+          isError: !!error,
+        },
+      };
+    };
+
   const updateCompleteSentence: CompleteSentenceService['updateCompleteSentence'] =
     async (params) => {
       const { data, error } = await supabase
@@ -76,6 +93,7 @@ export default function useCompleteSentenceApi(): CompleteSentenceService {
     };
   return {
     addCompleteSentence,
+    addCompleteSentences,
     updateCompleteSentence,
     deleteCompleteSentence,
     deleteCompleteSentences,

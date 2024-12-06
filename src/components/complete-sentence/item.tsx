@@ -1,5 +1,5 @@
 import useToastManager from '@/hooks/use-toast';
-import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, TextField } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 
 type AnswerTextFieldProps = {
@@ -74,9 +74,14 @@ export default function CompleteSentenceItem({
       }}
       variant="outlined"
     >
-      <Typography variant="body1" lineHeight={2.1}>
+      <Box
+        sx={{
+          typography: 'body1',
+          lineHeight: 1.8,
+        }}
+      >
         {render}
-      </Typography>
+      </Box>
       {onDelete && (
         <Stack direction="row" justifyContent="flex-end">
           <Button

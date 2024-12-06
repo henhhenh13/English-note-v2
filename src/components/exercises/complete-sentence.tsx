@@ -4,8 +4,14 @@ import { Typography } from '@mui/material';
 import QuizIcon from '@mui/icons-material/Quiz';
 import { useModal } from '@ebay/nice-modal-react';
 import CompleteSentenceViewModal from '@/components/modals/complete-sentence/view';
+import { CompleteSentence } from '@/managers/complete-sentence/interface';
 
-export default function ExerciseCompleteSentence() {
+type ExerciseCompleteSentenceProps = {
+  completeSentence: CompleteSentence;
+};
+export default function ExerciseCompleteSentence({
+  completeSentence,
+}: ExerciseCompleteSentenceProps) {
   const completeSentenceViewModal = useModal(CompleteSentenceViewModal);
   return (
     <Stack
@@ -22,7 +28,9 @@ export default function ExerciseCompleteSentence() {
         },
       }}
       onClick={() => {
-        completeSentenceViewModal.show();
+        completeSentenceViewModal.show({
+          completeSentence,
+        });
       }}
     >
       <QuizIcon color="primary" />

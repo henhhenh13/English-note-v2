@@ -12,22 +12,47 @@ import {
 } from '@mui/material';
 import { useCallback, useMemo, useState } from 'react';
 
+type CompleteSentenceEditAddModalProps = {
+  mode: 'edit' | 'add';
+  completeSentence?: {
+    title: string;
+    suggestWords: string[];
+    questionList: {
+      sentence: string;
+      selectedWords: { index: number; word: string; id: string }[];
+    }[];
+  };
+  onSubmit: (params: {
+    title: string;
+    suggestWords: string[];
+    questionList: {
+      sentence: string;
+      selectedWords: { index: number; word: string; id: string }[];
+    }[];
+  }) => void;
+};
 const CompleteSentenceEditAddModal = NiceModal.create(
-  (): React.ReactElement => {
+  ({
+    mode,
+    completeSentence,
+    onSubmit,
+  }: CompleteSentenceEditAddModalProps): React.ReactElement => {
     const { visible, remove } = useModal();
-    const [title, setTitle] = useState('');
+    const [title, setTitle] = useState(completeSentence?.title || '');
     const [sentence, setSentence] = useState('');
     const [suggestWord, setSuggestWord] = useState('');
-    const [suggestWords, setSuggestWords] = useState<string[]>([]);
+    const [suggestWords, setSuggestWords] = useState<string[]>(
+      completeSentence?.suggestWords || [],
+    );
     const [selectedWords, setSelectedWords] = useState<
       { index: number; word: string; id: string }[]
     >([]);
-    const [completeSentences, setCompleteSentences] = useState<
+    const [questionList, setQuestionList] = useState<
       {
         sentence: string;
         selectedWords: { index: number; word: string; id: string }[];
       }[]
-    >([]);
+    >(completeSentence?.questionList || []);
 
     const handleAddSuggestWord = useCallback(() => {
       setSuggestWords((prev) => [...prev, suggestWord]);
@@ -63,8 +88,8 @@ const CompleteSentenceEditAddModal = NiceModal.create(
       [selectedWords],
     );
 
-    const handleAddCompleteSentence = useCallback(() => {
-      setCompleteSentences((prev) => [
+    const handleAddQuestionList = useCallback(() => {
+      setQuestionList((prev) => [
         ...prev,
         {
           sentence,
@@ -76,14 +101,27 @@ const CompleteSentenceEditAddModal = NiceModal.create(
     }, [sentence, selectedWords]);
 
     const handleDeleteCompleteSentence = useCallback((index: number) => {
-      setCompleteSentences((prev) => prev.filter((_, i) => i !== index));
+      setQuestionList((prev) => prev.filter((_, i) => i !== index));
     }, []);
 
     return (
       <ModalContainer
-        title="Complete Sentence Add"
+        title={
+          mode === 'edit' ? 'Complete Sentence Edit' : 'Complete Sentence Add'
+        }
+        submitButtonTitle={
+          mode === 'edit' ? 'Update Complete Sentence' : 'Add Complete Sentence'
+        }
         open={visible}
         onClose={remove}
+        onSubmit={async () => {
+          onSubmit({
+            title,
+            suggestWords,
+            questionList,
+          });
+          remove();
+        }}
       >
         <Stack sx={{ px: 4, width: 960 }} spacing={3} direction="row">
           <Stack sx={{ width: '45%' }} spacing={3}>
@@ -137,10 +175,7 @@ const CompleteSentenceEditAddModal = NiceModal.create(
                     ))}
                 </Stack>
                 <Stack direction="row" justifyContent="flex-end">
-                  <Button
-                    variant="contained"
-                    onClick={handleAddCompleteSentence}
-                  >
+                  <Button variant="contained" onClick={handleAddQuestionList}>
                     Add Sentence
                   </Button>
                 </Stack>
@@ -200,11 +235,11 @@ const CompleteSentenceEditAddModal = NiceModal.create(
                   overflowY: 'auto',
                 }}
               >
-                {!!completeSentences.length &&
-                  completeSentences.map((sentence, index) => (
+                {!!questionList.length &&
+                  questionList.map((question, index) => (
                     <CompleteSentenceItem
                       key={index}
-                      {...sentence}
+                      {...question}
                       onDelete={() => handleDeleteCompleteSentence(index)}
                     />
                   ))}

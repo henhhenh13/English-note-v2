@@ -4,6 +4,7 @@ import { CompleteSentenceService } from '@/managers/complete-sentence/interface'
 export default function useCompleteSentenceManager(): CompleteSentenceService {
   const {
     addCompleteSentence,
+    addCompleteSentences,
     updateCompleteSentence,
     deleteCompleteSentence,
     deleteCompleteSentences,
@@ -11,6 +12,7 @@ export default function useCompleteSentenceManager(): CompleteSentenceService {
 
   return {
     addCompleteSentence,
+    addCompleteSentences,
     updateCompleteSentence,
     deleteCompleteSentence,
     deleteCompleteSentences,
