@@ -1,4 +1,3 @@
-import CompleteSentenceItem from '@/components/complete-sentence/item';
 import ModalContainer from '@/components/modals/container';
 import NiceModal, { useModal } from '@ebay/nice-modal-react';
 import { Chip, Paper, Stack, Typography } from '@mui/material';
@@ -26,7 +25,6 @@ const CompleteSentenceViewModal = NiceModal.create((): React.ReactElement => {
             {data.words.map((word) => (
               <Chip key={word} label={word} variant="outlined" sx={{ px: 1 }} />
             ))}
-            <Chip label="text" variant="outlined" sx={{ px: 1 }} />
           </Stack>
         </Paper>
         <Paper sx={{ py: 1.5, px: 2 }} elevation={4}>
@@ -40,15 +38,7 @@ const CompleteSentenceViewModal = NiceModal.create((): React.ReactElement => {
               maxHeight: 400,
               overflowY: 'auto',
             }}
-          >
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-            <CompleteSentenceItem />
-          </Stack>
+          ></Stack>
         </Paper>
       </Stack>
     </ModalContainer>

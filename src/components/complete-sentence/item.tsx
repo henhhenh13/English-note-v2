@@ -1,13 +1,6 @@
 import useToastManager from '@/hooks/use-toast';
-import { Paper, TextField, Typography } from '@mui/material';
+import { Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-const sentence =
-  'The washing machine is washing the text washing washing washing washing washing washing washing washing washing.';
-const words = [
-  { id: 1, word: 'washing', index: 1 },
-  { id: 2, word: 'machine', index: 2 },
-  { id: 4, word: 'washing', index: 4 },
-];
 
 type AnswerTextFieldProps = {
   answer: string;
@@ -31,7 +24,7 @@ const AnswerTextField = ({ answer }: AnswerTextFieldProps) => {
       size="small"
       variant="standard"
       sx={{
-        maxWidth: 120,
+        maxWidth: 80,
         mx: 0.5,
         input: {
           color: !value ? 'black' : isSuccess ? 'green' : 'red',
@@ -46,13 +39,22 @@ const AnswerTextField = ({ answer }: AnswerTextFieldProps) => {
   );
 };
 
-export default function CompleteSentenceItem() {
+type CompleteSentenceItemProps = {
+  selectedWords: { word: string; index: number; id: string }[];
+  sentence: string;
+  onDelete?: () => void;
+};
+export default function CompleteSentenceItem({
+  selectedWords,
+  sentence,
+  onDelete,
+}: CompleteSentenceItemProps) {
   const render = useMemo(() => {
     const sentences = sentence.split(' ');
     return sentences.map((word, index) => {
       return (
         <React.Fragment key={word + index}>
-          {words.find((w) => {
+          {selectedWords.find((w) => {
             return w.word === word && w.index === index;
           }) ? (
             <AnswerTextField answer={word} />
@@ -62,7 +64,7 @@ export default function CompleteSentenceItem() {
         </React.Fragment>
       );
     });
-  }, []);
+  }, [selectedWords, sentence]);
   return (
     <Paper
       sx={{
@@ -75,6 +77,18 @@ export default function CompleteSentenceItem() {
       <Typography variant="body1" lineHeight={2.1}>
         {render}
       </Typography>
+      {onDelete && (
+        <Stack direction="row" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            size="small"
+            color="error"
+            onClick={onDelete}
+          >
+            Delete
+          </Button>
+        </Stack>
+      )}
     </Paper>
   );
 }

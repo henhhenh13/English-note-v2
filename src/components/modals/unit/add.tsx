@@ -17,6 +17,8 @@ import AIQuestionAddEditModal from '@/components/modals/ai-question/add-edit';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import ExerciseAIQuestionEdit from '@/components/exercises/edit-ai-question';
 import useAiQuestionManager from '@/managers/ai-question/manager';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import CompleteSentenceEditAddModal from '@/components/modals/complete-sentence/edit-add';
 
 const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const { visible, remove } = useModal();
@@ -31,9 +33,11 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
   const { addAiQuestions } = useAiQuestionManager();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
   const videoAddModal = useModal(VideoAddModal);
   const quizAddEditModal = useModal(QuizAddEditModal);
   const aiQuestionAddEditModal = useModal(AIQuestionAddEditModal);
+  const completeSentenceEditAddModal = useModal(CompleteSentenceEditAddModal);
 
   const [videos, setVideos] = useState<
     { description: string; url: string; title: string }[]
@@ -135,6 +139,12 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
             },
           }),
       },
+      {
+        title: 'Complete Sentence',
+        icon: QuestionAnswerIcon,
+        iconColor: 'primary',
+        onClick: () => completeSentenceEditAddModal.show(),
+      },
     ];
   }, [
     videoAddModal,
@@ -143,6 +153,7 @@ const UnitAddModal = NiceModal.create((): React.ReactElement => {
     handleQuizAdd,
     aiQuestionAddEditModal,
     handleAiQuestionAdd,
+    completeSentenceEditAddModal,
   ]);
 
   const handleAddUnit = useCallback(async () => {
