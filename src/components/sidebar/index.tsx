@@ -12,8 +12,6 @@ import { PageState } from '@/managers/page/state';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import { SvgIconComponent } from '@mui/icons-material';
 import CategoryIcon from '@mui/icons-material/Category';
-import PestControlIcon from '@mui/icons-material/PestControl';
-import BugReportIcon from '@mui/icons-material/BugReport';
 export default function Sidebar() {
   const { page, updatePage } = usePageManager();
 
@@ -33,16 +31,6 @@ export default function Sidebar() {
         title: 'Grammars',
         key: 'grammar',
         icon: CategoryIcon,
-      },
-      {
-        title: 'Api Testing',
-        key: 'apiTesting',
-        icon: BugReportIcon,
-      },
-      {
-        title: 'UI Testing',
-        key: 'uiTesting',
-        icon: PestControlIcon,
       },
     ];
 
